@@ -1,0 +1,20 @@
+#version 330
+
+// Entrées
+layout(location=0) in vec3 aVertexPosition;
+layout(location=1) in vec3 aVertexColor;
+
+// Variables uniformes
+uniform mat4 uMVP;
+
+// Sorties
+out vec3 vColor;
+out vec4 outPosition; // feedback
+
+// Main
+void main()
+{
+    vColor = aVertexColor;
+    gl_Position=uMVP*vec4(aVertexPosition,1);
+    outPosition=gl_Position;
+}
