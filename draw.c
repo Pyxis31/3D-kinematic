@@ -387,7 +387,7 @@ void drawing(sDrawingArg drawingArg)
 	// Delta 3
 	if (frame==2)
 	{
-		// Paramètres du robot delta
+		// Paramètres du robot delta 3
 		Re=0.05;	// Rayon de la nacelle mobile (Rm)
 		Rf=0.20;	// Rayon de la plateforme fixe supérieure
 		Lf=0.42;	// longueur du bras
