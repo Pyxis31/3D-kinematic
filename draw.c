@@ -361,7 +361,7 @@ void drawing(sDrawingArg drawingArg)
 		// Tige plongeante (Cube VBO 0)
 
 		// Applique les transformées globales
-		glm_translate(stack[0],(vec3){0.5,-drawingArg.Rotate_sliderValue_Joint3/720.0,0.0});
+		glm_translate(stack[0],(vec3){0.5,-1*drawingArg.Rotate_sliderValue_Joint3/720.0,0.0});
 		glm_rotate(stack[0],degreesToRadians(drawingArg.Rotate_sliderValue_Joint4),(vec3){0.0,1.0,0.0});												
 
 		// Pousse la pile
