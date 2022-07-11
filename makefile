@@ -22,27 +22,19 @@ OUTPUT_DIR = "C:/Users/simfra.EU_OMRON_NET/Desktop/3Dkinematic/bin"
 # Répertoires dans lesquels se trouvent les fichiers d'en-têtes (.h)
 # -I : ajoute un répertoire de recherche de fichiers
 INCLUDES = 	-I $(DIR_GTK)/include/gtk-3.0 \
-			-I $(DIR_GTK)/include/gtk-3.0 \
-			-I $(DIR_GTK)/include/cairo \
-			-I $(DIR_GTK)/include \
 			-I $(DIR_GTK)/include/pango-1.0 \
-			-I $(DIR_GTK)/include/fribidi \
 			-I $(DIR_GTK)/include \
-			-I $(DIR_GTK)/include/atk-1.0 \
-			-I $(DIR_GTK)/include/cairo \
-			-I $(DIR_GTK)/include/pixman-1 \
-			-I $(DIR_GTK)/include \
-			-I $(DIR_GTK)/include/freetype2 \
-			-I $(DIR_GTK)/include \
-			-I $(DIR_GTK)/include/harfbuzz \
-			-I $(DIR_GTK)/include/libpng16 \
-			-I $(DIR_GTK)/include/gdk-pixbuf-2.0 \
-			-I $(DIR_GTK)/include/libpng16 \
-			-I $(DIR_GTK)/include \
-			-I $(DIR_GTK)/lib/libffi-3.2.1/include \
 			-I $(DIR_GTK)/include/glib-2.0 \
 			-I $(DIR_GTK)/lib/glib-2.0/include \
-			-I $(DIR_GTK)/include \
+			-I $(DIR_GTK)/include/harfbuzz \
+			-I $(DIR_GTK)/include/freetype2 \
+			-I $(DIR_GTK)/include/libpng16 \
+			-I $(DIR_GTK)/include/fribidi \
+			-I $(DIR_GTK)/include/cairo \
+			-I $(DIR_GTK)/include/lzo \
+			-I $(DIR_GTK)/include/pixman-1 \
+			-I $(DIR_GTK)/include/gdk-pixbuf-2.0 \
+			-I $(DIR_GTK)/include/atk-1.0 \
 			-I $(DIR_MGW)/include \
 			-I $(DIR_STD)/include \
 			-I $(DIR_3D_kinematic)/include			
@@ -56,6 +48,7 @@ LIBS 	= 	-L $(DIR_GTK)/lib \
 			-L $(DIR_3D_kinematic)/lib \
 			-lgtk-3 \
 			-lgdk-3 \
+			-lz \
 			-lgdi32 \
 			-limm32 \
 			-lshell32 \
@@ -65,10 +58,14 @@ LIBS 	= 	-L $(DIR_GTK)/lib \
 			-ldwmapi \
 			-lsetupapi \
 			-lcfgmgr32 \
-			-lz \
+			-lhid \
+			-lwinspool \
+			-lcomctl32 \
+			-lcomdlg32 \
 			-lpangowin32-1.0 \
 			-lpangocairo-1.0 \
 			-lpango-1.0 \
+			-lharfbuzz \
 			-latk-1.0 \
 			-lcairo-gobject \
 			-lcairo \

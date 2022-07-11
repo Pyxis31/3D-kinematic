@@ -491,7 +491,7 @@ void drawing(sDrawingArg drawingArg)
 		glEnableVertexAttribArray(1);
 
 		// Repère cartésien (Lignes VBO 1)
-		
+
 		// Matrice d'identité
 		glm_mat4_identity(identity);
 
