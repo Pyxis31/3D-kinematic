@@ -54,6 +54,7 @@ sDeltaACS Delta3ACS;
 sDeltaMCS Delta3MCS;
 sWrist* pWristPos;
 sElbow* pElbowAngles;
+sKnee knee;
 
 
 // Initialisation
@@ -397,7 +398,7 @@ void drawing(sDrawingArg drawingArg)
 		Delta3ACS.thetaC=drawingArg.Rotate_sliderValue_Joint3;	// position angulaire du troisième bras (degrés)
 
 		// Calcule la position de la nacelle mobile par rapport au repère cartésien du robot (XYZ) 
-		Delta3MCS=forward(Re,Rf,Lf,Le,Delta3ACS);	
+		Delta3MCS=forward(Re,Rf,Lf,Le,Delta3ACS,knee);	
 
 		// Calcule les positions des poignets par rapport aux repères cartésiens des bras (XiYiZi)
 		pWristPos=wrist(Delta3MCS,Rf,Re);

@@ -79,11 +79,11 @@ sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le)
  
 
 // Cinématique directe d'un robot delta 3 (ACS --> MCS)
-sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS)
+sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS,sKnee Knee)
 {
 	// ********** Déclarations (locales) ************
 	double t,dtr,y1,z1,y2,x2,z2,y3,x3,z3,dnm,w1,w2,w3,a1,b1,a2,b2,aV,bV,cV,dV;
-	double x,y;
+	double x,y,k;
 	sDeltaMCS MCS;
 	// *********** Fin de déclarations **************
 
@@ -93,6 +93,17 @@ sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS)
 	ACS.thetaA *= dtr;
 	ACS.thetaB *= dtr;
 	ACS.thetaC *= dtr;
+
+	// Calculate knee A
+	Knee.x=0;
+	Knee.y=Lf*cos(ACS.thetaA)-Rf;
+	Knee.z=Lf*sin(ACS.thetaA);
+
+	// Calculate knee B
+	k=-Lf*cos(ACS.thetaB)+Rf;
+	//Knee.x=;
+	//Knee.y=;
+	//Knee.z=;
 
 	y1 = -(t + Lf*cos(ACS.thetaA));
 	z1 = -Lf*sin(ACS.thetaA);
