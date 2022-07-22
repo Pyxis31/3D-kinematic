@@ -38,6 +38,7 @@
  *************************************************
 */
 
+/*
 // Calcule les positions des poignets par rapport aux repères cartésiens des bras (XiYiZi)
 sWrist* wrist(sDeltaMCS MCS,double Rf,double Re)
 {
@@ -56,8 +57,9 @@ sWrist* wrist(sDeltaMCS MCS,double Rf,double Re)
 
 	return wristPos; // wristPos est un pointeur sur tableau de type structure sWrist..
 }
+*/
 
-
+/*
 // Calcule les orientations latérale et longitudinale de l'avant-bras (à la jointure du coude)
 sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le)
 {
@@ -76,14 +78,37 @@ sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le)
 
 	return elbowAngles; // elbowAngles est un pointeur sur tableau de type structure sElbow..
 }
- 
+*/
+
+// Calcule les positions cartésiennes des poignets
+sElbow* elbow(sDeltaACS ACS,double Re,double Rf,double Lf)
+{
+	// ********** Déclarations (locales) ************
+	static sElbow elbowCoord[3];
+	double k;
+	// *********** Fin de déclarations **************
+
+	// elbow A
+	elbowCoord[0].x=0;
+	elbowCoord[0].y=Lf*cos(ACS.thetaA)-Rf;
+	elbowCoord[0].z=Lf*sin(ACS.thetaA);
+
+	// elbow B
+	k=-Lf*cos(ACS.thetaB)+Rf;
+	elbowCoord[1].x=k*cos30;
+	elbowCoord[1].y=k*sin30;
+	elbowCoord[1].z=Rf*sin(ACS.thetaB);
+
+	return elbowCoord; // elbowCoord est un pointeur sur tableau de type structure sElbow..
+}
+
 
 // Cinématique directe d'un robot delta 3 (ACS --> MCS)
-sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS,sKnee Knee)
+sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS)
 {
 	// ********** Déclarations (locales) ************
 	double t,dtr,y1,z1,y2,x2,z2,y3,x3,z3,dnm,w1,w2,w3,a1,b1,a2,b2,aV,bV,cV,dV;
-	double x,y,k;
+	double x,y;
 	sDeltaMCS MCS;
 	// *********** Fin de déclarations **************
 
@@ -93,17 +118,6 @@ sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS,sKnee Kn
 	ACS.thetaA *= dtr;
 	ACS.thetaB *= dtr;
 	ACS.thetaC *= dtr;
-
-	// Calculate knee A
-	Knee.x=0;
-	Knee.y=Lf*cos(ACS.thetaA)-Rf;
-	Knee.z=Lf*sin(ACS.thetaA);
-
-	// Calculate knee B
-	k=-Lf*cos(ACS.thetaB)+Rf;
-	//Knee.x=;
-	//Knee.y=;
-	//Knee.z=;
 
 	y1 = -(t + Lf*cos(ACS.thetaA));
 	z1 = -Lf*sin(ACS.thetaA);

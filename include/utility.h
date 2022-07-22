@@ -41,6 +41,7 @@
 #define sin120	sqrt3/2.0   
 #define cos120	-0.5        
 #define tan60	sqrt3
+#define cos30	sqrt3/2;
 #define sin30	0.5
 #define tan30	1.0/sqrt3
 #define sin270	-1.0   

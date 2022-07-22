@@ -54,7 +54,6 @@ sDeltaACS Delta3ACS;
 sDeltaMCS Delta3MCS;
 sWrist* pWristPos;
 sElbow* pElbowAngles;
-sKnee knee;
 
 
 // Initialisation
@@ -396,9 +395,9 @@ void drawing(sDrawingArg drawingArg)
 		Delta3ACS.thetaA=drawingArg.Rotate_sliderValue_Joint1;	// position angulaire du premier bras (degrés)
 		Delta3ACS.thetaB=drawingArg.Rotate_sliderValue_Joint2;	// position angulaire du deuxième bras (degrés)
 		Delta3ACS.thetaC=drawingArg.Rotate_sliderValue_Joint3;	// position angulaire du troisième bras (degrés)
-
+/*
 		// Calcule la position de la nacelle mobile par rapport au repère cartésien du robot (XYZ) 
-		Delta3MCS=forward(Re,Rf,Lf,Le,Delta3ACS,knee);	
+		Delta3MCS=forward(Re,Rf,Lf,Le,Delta3ACS);	
 
 		// Calcule les positions des poignets par rapport aux repères cartésiens des bras (XiYiZi)
 		pWristPos=wrist(Delta3MCS,Rf,Re);
@@ -477,6 +476,7 @@ void drawing(sDrawingArg drawingArg)
 			// Restitue la matrice de vue originale
 			pop(stack);			
 		}
+*/
 	}
 
 	#ifndef Repère_Cartésien_OpenGL
@@ -525,11 +525,12 @@ void drawing(sDrawingArg drawingArg)
 		printf("Poignet 0 : X = %f, Y = %f, Z = %f\n",pWristPos[0].x,pWristPos[0].y,pWristPos[0].z);
 		printf("Poignet 1 : X = %f, Y = %f, Z = %f\n",pWristPos[1].x,pWristPos[1].y,pWristPos[1].z);
 		printf("Poignet 2 : X = %f, Y = %f, Z = %f\n",pWristPos[2].x,pWristPos[2].y,pWristPos[2].z);
-
+/*
 		// Affiche les orientations latérales et longitudinales des avant-bras (à la jointure des coudes)		
 		printf("Coude 0 : q2i = %f, q3i = %f\n",pElbowAngles[0].q2i,pElbowAngles[0].q3i);
 		printf("Coude 1 : q2i = %f, q3i = %f\n",pElbowAngles[1].q2i,pElbowAngles[1].q3i);
-		printf("Coude 2 : q2i = %f, q3i = %f\n",pElbowAngles[2].q2i,pElbowAngles[2].q3i);		
+		printf("Coude 2 : q2i = %f, q3i = %f\n",pElbowAngles[2].q2i,pElbowAngles[2].q3i);
+*/		
 	}
 	#endif
 }

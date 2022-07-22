@@ -36,14 +36,6 @@ struct sDeltaACS
 	double thetaC;
 };
 
-typedef struct sKnee sKnee;
-struct sKnee
-{
-	double x;
-	double y;
-	double z;
-};
-
 typedef struct sForward sForward;
 struct sForward
 {
@@ -55,11 +47,21 @@ struct sForward
 	sDeltaMCS deltaMCS;
 };
 
+/*
 typedef struct sElbow sElbow;
 struct sElbow
 {
 	double q2i;
 	double q3i;
+};
+*/
+
+typedef struct sElbow sElbow;
+struct sElbow
+{
+	double x;
+	double y;
+	double z;
 };
 
 typedef struct sWrist sWrist;
@@ -80,7 +82,8 @@ struct sWrist
  **********************************************
 */
 sWrist* wrist(sDeltaMCS MCS,double Rf,double Re);
-sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le);
-sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS,sKnee knee);
+//sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le);
+sElbow* elbow(sDeltaACS ACS,double Re,double Rf,double Lf);
+sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS);
 
 #endif
