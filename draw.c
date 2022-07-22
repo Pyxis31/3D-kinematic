@@ -388,10 +388,10 @@ void drawing(sDrawingArg drawingArg)
 	if (frame==2)
 	{
 		// Paramètres du robot delta 3
-		Re=0.05;	// Rayon de la nacelle mobile (Rm)
-		Rf=0.20;	// Rayon de la plateforme fixe supérieure
+		Rf=0.20;	// Rayon de la plateforme fixe supérieure (base)
+		Re=0.05;	// Rayon de la nacelle mobile (wrist)
 		Lf=0.42;	// longueur du bras
-		Le=0.95;	// longueur de l'avant-bras (Lm)
+		Le=0.95;	// longueur de l'avant-bras
 		Delta3ACS.thetaA=drawingArg.Rotate_sliderValue_Joint1;	// position angulaire du premier bras (degrés)
 		Delta3ACS.thetaB=drawingArg.Rotate_sliderValue_Joint2;	// position angulaire du deuxième bras (degrés)
 		Delta3ACS.thetaC=drawingArg.Rotate_sliderValue_Joint3;	// position angulaire du troisième bras (degrés)

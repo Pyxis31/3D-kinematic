@@ -56,6 +56,22 @@ struct sElbow
 };
 */
 
+typedef struct sBase sBase;
+struct sBase
+{
+	double x;
+	double y;
+	double z;
+};
+
+typedef struct sShoulder sShoulder;
+struct sShoulder
+{
+	double x;
+	double y;
+	double z;
+};
+
 typedef struct sElbow sElbow;
 struct sElbow
 {
@@ -81,7 +97,10 @@ struct sWrist
  ********* Prototypes de fonctions ************
  **********************************************
 */
-sWrist* wrist(sDeltaMCS MCS,double Rf,double Re);
+sBase* base(double Rf);
+sShoulder* shoulder(double Rf);
+//sWrist* wrist(sDeltaMCS MCS,double Rf,double Re);
+sWrist* wrist(sDeltaMCS MCS,double Re);
 //sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le);
 sElbow* elbow(sDeltaACS ACS,double Re,double Rf,double Lf);
 sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS);

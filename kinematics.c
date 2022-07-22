@@ -80,28 +80,109 @@ sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le)
 }
 */
 
-// Calcule les positions cartésiennes des poignets
+// Calcule les positions cartésiennes de la plateforme fixe supérieure (base)
+sBase* base(double Rf)
+{
+	// ********** Déclarations (locales) ************
+	static sBase basePos[3];
+	// *********** Fin de déclarations **************
+
+	// base A
+	basePos[0].x=-Rf/tan30;
+	basePos[0].y=-Rf;
+	basePos[0].z=0;
+
+	// base B
+	basePos[1].x=Rf/tan30;
+	basePos[1].y=-Rf;
+	basePos[1].z=0;
+
+	// base C
+	basePos[2].x=0;
+	basePos[2].y=Rf/sin30;
+	basePos[2].z=0;
+
+	return basePos; // basePos est un pointeur sur tableau de type structure sBase..
+}
+
+// Calcule les positions cartésiennes des épaules
+sShoulder* shoulder(double Rf)
+{
+	// ********** Déclarations (locales) ************
+	static sShoulder shoulderPos[3];
+	// *********** Fin de déclarations **************
+
+	// shoulder A
+	shoulderPos[0].x=0;
+	shoulderPos[0].y=-Rf;
+	shoulderPos[0].z=0;
+/*
+	// shoulder B
+	shoulderPos[1].x=;
+	shoulderPos[1].y=;
+	shoulderPos[1].z=;
+
+	// shoulder C
+	shoulderPos[2].x=;
+	shoulderPos[2].y=;
+	shoulderPos[2].z=;
+*/
+	return shoulderPos; // shoulderPos est un pointeur sur tableau de type structure sShoulder..
+}
+
+// Calcule les positions cartésiennes des coudes
 sElbow* elbow(sDeltaACS ACS,double Re,double Rf,double Lf)
 {
 	// ********** Déclarations (locales) ************
-	static sElbow elbowCoord[3];
+	static sElbow elbowPos[3];
 	double k;
 	// *********** Fin de déclarations **************
 
 	// elbow A
-	elbowCoord[0].x=0;
-	elbowCoord[0].y=Lf*cos(ACS.thetaA)-Rf;
-	elbowCoord[0].z=Lf*sin(ACS.thetaA);
+	elbowPos[0].x=0;
+	elbowPos[0].y=Lf*cos(ACS.thetaA)-Rf;
+	elbowPos[0].z=Lf*sin(ACS.thetaA);
 
 	// elbow B
 	k=-Lf*cos(ACS.thetaB)+Rf;
-	elbowCoord[1].x=k*cos30;
-	elbowCoord[1].y=k*sin30;
-	elbowCoord[1].z=Rf*sin(ACS.thetaB);
+	elbowPos[1].x=k*cos30;
+	elbowPos[1].y=k*sin30;
+	elbowPos[1].z=Lf*sin(ACS.thetaB);
 
-	return elbowCoord; // elbowCoord est un pointeur sur tableau de type structure sElbow..
+	// elbow C
+	k=-Lf*cos(ACS.thetaC)+Rf;
+	elbowPos[2].x=-k*cos30;
+	elbowPos[2].y=k*sin30;
+	elbowPos[2].z=Lf*sin(ACS.thetaC);
+
+	return elbowPos; // elbowPos est un pointeur sur tableau de type structure sElbow..
 }
 
+// Calcule les positions cartésiennes des poignets
+sWrist* wrist(sDeltaMCS MCS,double Re)
+{
+	// ********** Déclarations (locales) ************
+	static sWrist wristPos[3];
+	// *********** Fin de déclarations **************
+
+	// wrist A
+	wristPos[0].x=MCS.x;
+	wristPos[0].y=MCS.y-Re;
+	wristPos[0].z=MCS.z;
+
+	// wrist B
+	wristPos[1].x=MCS.x+sin120*Re;
+	wristPos[1].y=MCS.y-cos120*Re;
+	wristPos[1].z=MCS.z;
+
+	// wrist C
+	wristPos[2].x=MCS.x-sin120*Re;
+	wristPos[2].y=MCS.y-cos120*Re;
+	wristPos[2].z=MCS.z;
+
+
+	return wristPos; // wristPos est un pointeur sur tableau de type structure sWrist..
+}
 
 // Cinématique directe d'un robot delta 3 (ACS --> MCS)
 sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS)
