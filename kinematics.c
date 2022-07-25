@@ -110,23 +110,28 @@ sShoulder* shoulder(double Rf)
 {
 	// ********** Déclarations (locales) ************
 	static sShoulder shoulderPos[3];
+	vec3 v;
 	// *********** Fin de déclarations **************
 
 	// shoulder A
 	shoulderPos[0].x=0;
 	shoulderPos[0].y=-Rf;
 	shoulderPos[0].z=0;
-/*
+
 	// shoulder B
-	shoulderPos[1].x=;
-	shoulderPos[1].y=;
-	shoulderPos[1].z=;
+	glm_vec3_copy((vec3){shoulderPos[0].x,shoulderPos[0].y,shoulderPos[0].z},v);
+	glm_vec3_rotate(v,120.0,(vec3){0.0,0.0,1.0});
+	shoulderPos[1].x=v[0];
+	shoulderPos[1].y=v[1];
+	shoulderPos[1].z=v[2];
 
 	// shoulder C
-	shoulderPos[2].x=;
-	shoulderPos[2].y=;
-	shoulderPos[2].z=;
-*/
+	glm_vec3_copy((vec3){shoulderPos[0].x,shoulderPos[0].y,shoulderPos[0].z},v);
+	glm_vec3_rotate(v,240.0,(vec3){0.0,0.0,1.0});
+	shoulderPos[2].x=v[0];
+	shoulderPos[2].y=v[1];
+	shoulderPos[2].z=v[2];
+
 	return shoulderPos; // shoulderPos est un pointeur sur tableau de type structure sShoulder..
 }
 

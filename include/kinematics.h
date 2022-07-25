@@ -10,6 +10,8 @@
 */
 
 // Des Headers situés dans les répertoires listés dans le makefile
+#include <cglm/cglm.h>		// OpenGL Mathematics
+#include <cglm/struct.h>	// OpenGL Mathematics
 
 
 /**********************************************

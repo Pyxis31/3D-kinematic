@@ -98,4 +98,16 @@ void mat_multiply(float* pMatrix,float* pA,float* pB)
 		pMatrix[i]=result[i];
 }
 
+/*
+// Rotation d'un vecteur autour de Z
+vector3 rotate(vector3 vector,double angle)
+{
+    vector3 t = vector;
+    t.x = vector.x * cos(angle) - vector.y * sin(angle);
+    t.y = vector.x * sin(angle) + vector.y * cos(angle);
+    t.z = vector.z;
+    return t;
+}
+*/
+
 #endif
