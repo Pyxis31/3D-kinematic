@@ -49,14 +49,17 @@ struct sForward
 	sDeltaMCS deltaMCS;
 };
 
-/*
 typedef struct sElbow sElbow;
 struct sElbow
 {
 	double q2i;
 	double q3i;
 };
-*/
+
+/*
+// *********************
+// *** TEST newdelta ***
+// *********************
 
 typedef struct sBase sBase;
 struct sBase
@@ -81,6 +84,7 @@ struct sElbow
 	double y;
 	double z;
 };
+*/
 
 typedef struct sWrist sWrist;
 struct sWrist
@@ -99,12 +103,13 @@ struct sWrist
  ********* Prototypes de fonctions ************
  **********************************************
 */
-sBase* base(double Rf);
-sShoulder* shoulder(double Rf);
-//sWrist* wrist(sDeltaMCS MCS,double Rf,double Re);
-sWrist* wrist(sDeltaMCS MCS,double Re);
-//sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le);
-sElbow* elbow(sDeltaACS ACS,double Re,double Rf,double Lf);
+//sBase* base(double Rf);
+//sShoulder* shoulder(double Rf);
+//sElbow* elbow(sDeltaACS ACS,double Re,double Rf,double Lf);
+//sWrist* wrist(sDeltaMCS MCS,double Re);
+
+sWrist* wrist(sDeltaMCS MCS,double Rf,double Re);
+sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le);
 sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS);
 
 #endif

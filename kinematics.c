@@ -38,7 +38,7 @@
  *************************************************
 */
 
-/*
+
 // Calcule les positions des poignets par rapport aux repères cartésiens des bras (XiYiZi)
 sWrist* wrist(sDeltaMCS MCS,double Rf,double Re)
 {
@@ -57,9 +57,8 @@ sWrist* wrist(sDeltaMCS MCS,double Rf,double Re)
 
 	return wristPos; // wristPos est un pointeur sur tableau de type structure sWrist..
 }
-*/
 
-/*
+
 // Calcule les orientations latérale et longitudinale de l'avant-bras (à la jointure du coude)
 sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le)
 {
@@ -78,7 +77,11 @@ sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le)
 
 	return elbowAngles; // elbowAngles est un pointeur sur tableau de type structure sElbow..
 }
-*/
+
+/*
+// *********************
+// *** TEST newdelta ***
+// *********************
 
 // Calcule les positions cartésiennes de la plateforme fixe supérieure (base)
 sBase* base(double Rf)
@@ -188,6 +191,7 @@ sWrist* wrist(sDeltaMCS MCS,double Re)
 
 	return wristPos; // wristPos est un pointeur sur tableau de type structure sWrist..
 }
+*/
 
 // Cinématique directe d'un robot delta 3 (ACS --> MCS)
 sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS)

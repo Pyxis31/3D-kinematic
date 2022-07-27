@@ -33,7 +33,7 @@ extern int frame;
 extern sArgsComputeThread computeThreadArgs;
 
 // Types de base
-GLuint program,vboID[2],vaoID[1],textureID;
+GLuint program,vboID[3],vaoID[1],textureID;
 
 
 // Structures
@@ -165,6 +165,13 @@ void init(GtkWidget* pMessages_display)
 		{{0.0,0.0,0.5},	{0,0,1}},
 	};
 
+	// Simple ligne
+	sVertex3Dcolor straight[]=
+	{
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0}},	// Parallèle à X, de longueur 1 et de couleur cyan
+		{{1.0,0.0,0.0},	{0.0,1.0,1.0}},
+	};
+
 
     /***************************************************
 	 * VAO : spécifie les formats des attributs au GPU *
@@ -192,6 +199,11 @@ void init(GtkWidget* pMessages_display)
 	glBindBuffer(GL_ARRAY_BUFFER,vboID[1]);
 	// Transfert les données dans le GPU
 	glBufferData(GL_ARRAY_BUFFER,sizeof(coordSys),coordSys,GL_STATIC_DRAW);
+
+	// Définit le VB0 2 (Simple ligne)
+	glBindBuffer(GL_ARRAY_BUFFER,vboID[2]);
+	// Transfert les données dans le GPU
+	glBufferData(GL_ARRAY_BUFFER,sizeof(straight),straight,GL_STATIC_DRAW);
 
 
     /****************************************
@@ -395,7 +407,7 @@ void drawing(sDrawingArg drawingArg)
 		Delta3ACS.thetaA=drawingArg.Rotate_sliderValue_Joint1;	// position angulaire du premier bras (degrés)
 		Delta3ACS.thetaB=drawingArg.Rotate_sliderValue_Joint2;	// position angulaire du deuxième bras (degrés)
 		Delta3ACS.thetaC=drawingArg.Rotate_sliderValue_Joint3;	// position angulaire du troisième bras (degrés)
-/*
+
 		// Calcule la position de la nacelle mobile par rapport au repère cartésien du robot (XYZ) 
 		Delta3MCS=forward(Re,Rf,Lf,Le,Delta3ACS);	
 
@@ -476,8 +488,45 @@ void drawing(sDrawingArg drawingArg)
 			// Restitue la matrice de vue originale
 			pop(stack);			
 		}
-*/
+
+
+/*
+// *********************
+// *** TEST newdelta ***
+// *********************
+
+		// VBO et ses attributs
+		//
+		// Bind le VBO
+		glBindBuffer(GL_ARRAY_BUFFER,vboID[2]);
+		// Format des attributs de positions
+		glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,position))); // (Attribut,Composantes(XYZ),Types,...)
+		glEnableVertexAttribArray(0);	
+		// Format des attributs de couleurs
+		glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Attribut,Composantes(RVB),Types,...)
+		glEnableVertexAttribArray(1);
+
+		// Sauvegarde la matrice de vue originale
+		push(stack);
+		// Applique les transformées globales
+		//glm_rotate(stack[0],degreesToRadians(45),(vec3){0.0,1.0,0.0});
+		glm_translate(stack[0],(vec3){0.0,0.1,0.0});
+
+		// Récupération des ID
+		uMatrix=glGetUniformLocation(program,"uMVP");
+		// Envoi la matrice au shader
+		glUniformMatrix4fv(uMatrix,1,GL_FALSE,(float*)stack[0]);
+
+		// Dessine
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+		glDrawArrays(GL_LINES,0,2); // (type de primitive,vertex de départ,nombre total de vertices)
+
+		// Restitue la matrice de vue originale
+		pop(stack);
+*/	
 	}
+
 
 	#ifndef Repère_Cartésien_OpenGL
 		// VBO et ses attributs utilisés pour le repère cartésien 
