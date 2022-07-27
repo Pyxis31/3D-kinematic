@@ -65,8 +65,7 @@ void init(GtkWidget* pMessages_display)
 	sReturnFnc_LdTex responseLdTexture;
 	char pathToFile[UCHAR_MAX];
 //	unsigned char *pDataTexture;
-	int numVBOs=2;
-	int numVAOs=1;
+	int numVBOs, numVAOs;
 	// *********** Fin de déclarations **************	
 
     /****************************************** 
@@ -178,6 +177,7 @@ void init(GtkWidget* pMessages_display)
 	 ***************************************************
 	*/
 	// Réserve des blocs mémoire et définit des ID
+	numVAOs=1;
 	glGenVertexArrays(numVAOs,vaoID);
 	// Définit le VA0 0 (un seul VAO pour tous les VBO)
 	glBindVertexArray(vaoID[0]);
@@ -188,6 +188,7 @@ void init(GtkWidget* pMessages_display)
 	 ********************************************************
 	*/
 	// Réserve des blocs mémoire et définit des ID
+	numVBOs=3;
 	glGenBuffers(numVBOs,vboID);
 	
 	// Définit le VB0 0 (cube)
@@ -490,7 +491,7 @@ void drawing(sDrawingArg drawingArg)
 		}
 
 
-/*
+
 // *********************
 // *** TEST newdelta ***
 // *********************
@@ -509,7 +510,7 @@ void drawing(sDrawingArg drawingArg)
 		// Sauvegarde la matrice de vue originale
 		push(stack);
 		// Applique les transformées globales
-		//glm_rotate(stack[0],degreesToRadians(45),(vec3){0.0,1.0,0.0});
+		glm_rotate(stack[0],degreesToRadians(45),(vec3){0.0,1.0,0.0});
 		glm_translate(stack[0],(vec3){0.0,0.1,0.0});
 
 		// Récupération des ID
@@ -524,7 +525,7 @@ void drawing(sDrawingArg drawingArg)
 
 		// Restitue la matrice de vue originale
 		pop(stack);
-*/	
+	
 	}
 
 
