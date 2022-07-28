@@ -510,8 +510,15 @@ void drawing(sDrawingArg drawingArg)
 		// Sauvegarde la matrice de vue originale
 		push(stack);
 		// Applique les transformées globales
-		glm_rotate(stack[0],degreesToRadians(45),(vec3){0.0,1.0,0.0});
-		glm_translate(stack[0],(vec3){0.0,0.1,0.0});
+
+		glm_translate(stack[0],(vec3){0.1,0.0,0.1}); // Positionnement du segment (suivant la coordonnée de départ du vecteur)
+		
+		glm_rotate(stack[0],degreesToRadians(0.0),(vec3){0,0,1});	// Rotation du segment autour de z
+		glm_rotate(stack[0],degreesToRadians(45.0),(vec3){0,1,0});	// Rotation du segment autour de y
+		glm_rotate(stack[0],degreesToRadians(0.0),(vec3){1,0,0});	// Rotation du segment autour de x
+		
+		glm_scale(stack[0],(vec3){0.1,1.0,1.0}); // Dimensionnement du segment (à la norme du vecteur)
+
 
 		// Récupération des ID
 		uMatrix=glGetUniformLocation(program,"uMVP");
