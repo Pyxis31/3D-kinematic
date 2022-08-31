@@ -493,7 +493,7 @@ void drawing(sDrawingArg drawingArg)
 
 
 // *********************
-// *** TEST newdelta ***
+// ** TEST newdelta2  **
 // *********************
 
 		// VBO et ses attributs
