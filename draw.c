@@ -507,8 +507,24 @@ void drawing(sDrawingArg drawingArg)
 		glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Attribut,Composantes(RVB),Types,...)
 		glEnableVertexAttribArray(1);
 		// Modification dynamique des coordonnées de vertices
-		vec3 data={0.2,0.2,0.0};
+		vec3 data;
+		static int angle;
+		if (angle<=359)
+		{
+			angle+=1;
+		}
+		else
+		{
+			angle=0;
+		}
+		data[0]=0.0; // X
+		data[1]=0.0; // Y
+		data[2]=0.0; // Z
 		glBufferSubData(GL_ARRAY_BUFFER,0,sizeof(vec3),&data);
+		data[0]=sin(degToRad(angle))*1/2; // X
+		data[1]=cos(degToRad(angle))*1/2; // Y
+		data[2]=0.0; // Z
+		glBufferSubData(GL_ARRAY_BUFFER,sizeof(sVertex3Dcolor),sizeof(vec3),&data);
 
 		// Matrice d'identité
 		glm_mat4_identity(identity);
