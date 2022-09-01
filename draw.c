@@ -156,19 +156,19 @@ void init(GtkWidget* pMessages_display)
 	// Repère cartésien
 	sVertex3Dcolor coordSys[]=
 	{
-		{{0.0,0.0,0.0},	{1,0,0}},	// Abscisses X
-		{{0.5,0.0,0.0},	{1,0,0}},
-		{{0.0,0.0,0.0},	{0,1,0}},	// Ordonnées Y
-		{{0.0,0.5,0.0},	{0,1,0}},
-		{{0.0,0.0,0.0},	{0,0,1}},	// Profondeur Z
-		{{0.0,0.0,0.5},	{0,0,1}},
+		{{0.0,0.0,0.0},	{1,0,0},	{0,0}},	// Abscisses X
+		{{0.5,0.0,0.0},	{1,0,0},	{0,0}},
+		{{0.0,0.0,0.0},	{0,1,0},	{0,0}},	// Ordonnées Y
+		{{0.0,0.5,0.0},	{0,1,0},	{0,0}},
+		{{0.0,0.0,0.0},	{0,0,1},	{0,0}},	// Profondeur Z
+		{{0.0,0.0,0.5},	{0,0,1},	{0,0}},
 	};
 
 	// Simple ligne
 	sVertex3Dcolor straight[]=
 	{
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0}},	// Parallèle à X, de longueur 1 et de couleur cyan
-		{{1.0,0.0,0.0},	{0.0,1.0,1.0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},	// Parallèle à X, de longueur 1 et de couleur cyan
+		{{1.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 	};
 
 
@@ -203,8 +203,8 @@ void init(GtkWidget* pMessages_display)
 
 	// Définit le VB0 2 (Simple ligne)
 	glBindBuffer(GL_ARRAY_BUFFER,vboID[2]);
-	// Transfert les données dans le GPU
-	glBufferData(GL_ARRAY_BUFFER,sizeof(straight),straight,GL_STATIC_DRAW);
+	// Transfert les données dans le GPU et permet leur modification dans la boucle de rendu
+	glBufferData(GL_ARRAY_BUFFER,sizeof(straight),straight,GL_STREAM_DRAW);
 
 
     /****************************************
@@ -506,18 +506,15 @@ void drawing(sDrawingArg drawingArg)
 		// Format des attributs de couleurs
 		glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Attribut,Composantes(RVB),Types,...)
 		glEnableVertexAttribArray(1);
+		// Modification dynamique des coordonnées de vertices
+		vec3 data={0.2,0.2,0.0};
+		glBufferSubData(GL_ARRAY_BUFFER,0,sizeof(vec3),&data);
 
-		// Sauvegarde la matrice de vue originale
-		push(stack);
-		
-		// Applique les transformées globales
-		glm_translate(stack[0],(vec3){0.1,0.0,0.1}); // Positionnement du segment (suivant la coordonnée de départ du vecteur)
-		
-		glm_rotate(stack[0],degToRad(0.0),(vec3){0,0,1});	// Rotation du segment autour de z
-		glm_rotate(stack[0],degToRad(45.0),(vec3){0,1,0});	// Rotation du segment autour de y
-		glm_rotate(stack[0],degToRad(0.0),(vec3){1,0,0});	// Rotation du segment autour de x
-		
-		glm_scale(stack[0],(vec3){0.1,1.0,1.0}); // Dimensionnement du segment (à la norme du vecteur)
+		// Matrice d'identité
+		glm_mat4_identity(identity);
+
+		// MVP
+		glm_mat4_mul(viewProj,identity,stack[0]);
 
 		// Récupération des ID
 		uMatrix=glGetUniformLocation(program,"uMVP");
@@ -527,11 +524,7 @@ void drawing(sDrawingArg drawingArg)
 		// Dessine
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glDrawArrays(GL_LINES,0,2); // (type de primitive,vertex de départ,nombre total de vertices)
-
-		// Restitue la matrice de vue originale
-		pop(stack);
-	
+		glDrawArrays(GL_LINES,0,2); // (type de primitive,vertex de départ,nombre total de vertices)	
 	}
 
 
@@ -597,6 +590,6 @@ void ending()
 {
 	// Libération des ressources
 	glDeleteProgram(program);		
-	glDeleteBuffers(2,vboID);			// (nombre de buffer(s) à supprimer, buffer(s))
+	glDeleteBuffers(3,vboID);			// (nombre de buffer(s) à supprimer, buffer(s))
 	glDeleteVertexArrays(1,vaoID);
 }
