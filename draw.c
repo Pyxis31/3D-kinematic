@@ -64,8 +64,7 @@ void init(GtkWidget* pMessages_display)
 	sReturnFnc_LdSha responseLdShaFS;
 	sReturnFnc_LdTex responseLdTexture;
 	char pathToFile[UCHAR_MAX];
-//	unsigned char *pDataTexture;
-	int numVBOs, numVAOs;
+	int numVBOs, numVAOs, numTEXTs;
 	// *********** Fin de déclarations **************	
 
     /****************************************** 
@@ -164,11 +163,21 @@ void init(GtkWidget* pMessages_display)
 		{{0.0,0.0,0.5},	{0,0,1},	{0,0}},
 	};
 
-	// Simple ligne
-	sVertex3Dcolor straight[]=
+	// Robot delta
+	sVertex3Dcolor delta[]=
 	{
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},	// Parallèle à X, de longueur 1 et de couleur cyan
-		{{1.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Plateforme fixe supérieure (base)
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Epaules
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Coudes
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Poignets
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 	};
 
 
@@ -179,7 +188,7 @@ void init(GtkWidget* pMessages_display)
 	// Réserve des blocs mémoire et définit des ID
 	numVAOs=1;
 	glGenVertexArrays(numVAOs,vaoID);
-	// Définit le VA0 0 (un seul VAO pour tous les VBO)
+	// Définit le VAO 0 (un seul VAO pour tous les VBO)
 	glBindVertexArray(vaoID[0]);
 	
 
@@ -191,20 +200,20 @@ void init(GtkWidget* pMessages_display)
 	numVBOs=3;
 	glGenBuffers(numVBOs,vboID);
 	
-	// Définit le VB0 0 (cube)
+	// Définit le VBO 0 (cube)
 	glBindBuffer(GL_ARRAY_BUFFER,vboID[0]);
 	// Transfert les données dans le GPU
 	glBufferData(GL_ARRAY_BUFFER,sizeof(cube),cube,GL_STATIC_DRAW);
 
-	// Définit le VB0 1 (Repère cartésien)
+	// Définit le VBO 1 (Repère cartésien)
 	glBindBuffer(GL_ARRAY_BUFFER,vboID[1]);
 	// Transfert les données dans le GPU
 	glBufferData(GL_ARRAY_BUFFER,sizeof(coordSys),coordSys,GL_STATIC_DRAW);
 
-	// Définit le VB0 2 (Simple ligne)
+	// Définit le VBO 2 (Robot delta)
 	glBindBuffer(GL_ARRAY_BUFFER,vboID[2]);
 	// Transfert les données dans le GPU et permet leur modification dans la boucle de rendu
-	glBufferData(GL_ARRAY_BUFFER,sizeof(straight),straight,GL_STREAM_DRAW);
+	glBufferData(GL_ARRAY_BUFFER,sizeof(delta),delta,GL_STREAM_DRAW);
 
 
     /****************************************
@@ -213,7 +222,8 @@ void init(GtkWidget* pMessages_display)
 	 ****************************************
 	*/
 	// Réserve des blocs mémoire et définit des ID
-	glGenTextures(1,&textureID);
+	numTEXTs=1;
+	glGenTextures(numTEXTs,&textureID);
 
 	// Définit une texture 2D
 	glActiveTexture(GL_TEXTURE0);
