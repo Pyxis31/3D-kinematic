@@ -37,13 +37,13 @@
 #define radToDeg(angleRad) ((angleRad)*180.0/M_PI)
 
 // Constantes mathématiques
-#define sqrt3	1.7320508075688772
-#define sin120	sqrt3/2.0   
+#define sqrt3	1.73205080756888
+#define sin120	0.866025403784439 
 #define cos120	-0.5        
-#define tan60	sqrt3
-#define cos30	sqrt3/2;
+#define tan60	1.73205080756888
+#define cos30	0.866025403784439
 #define sin30	0.5
-#define tan30	1.0/sqrt3
+#define tan30	0.577350269189626
 #define sin270	-1.0   
 #define cos270	0.0
 

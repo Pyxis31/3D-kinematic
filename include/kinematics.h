@@ -56,7 +56,7 @@ struct sElbow
 	double q3i;
 };
 
-/*
+
 // *********************
 // *** TEST newdelta ***
 // *********************
@@ -68,7 +68,7 @@ struct sBase
 	double y;
 	double z;
 };
-
+/*
 typedef struct sShoulder sShoulder;
 struct sShoulder
 {
@@ -103,7 +103,7 @@ struct sWrist
  ********* Prototypes de fonctions ************
  **********************************************
 */
-//sBase* base(double Rf);
+sBase* base(double Rf);
 //sShoulder* shoulder(double Rf);
 //sElbow* elbow(sDeltaACS ACS,double Re,double Rf,double Lf);
 //sWrist* wrist(sDeltaMCS MCS,double Re);

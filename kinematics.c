@@ -78,7 +78,7 @@ sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le)
 	return elbowAngles; // elbowAngles est un pointeur sur tableau de type structure sElbow..
 }
 
-/*
+
 // *********************
 // *** TEST newdelta ***
 // *********************
@@ -92,22 +92,22 @@ sBase* base(double Rf)
 
 	// base A
 	basePos[0].x=-Rf/tan30;
-	basePos[0].y=-Rf;
-	basePos[0].z=0;
+	basePos[0].y=0;
+	basePos[0].z=-Rf;
 
 	// base B
 	basePos[1].x=Rf/tan30;
-	basePos[1].y=-Rf;
-	basePos[1].z=0;
+	basePos[1].y=0;
+	basePos[1].z=-Rf;
 
 	// base C
 	basePos[2].x=0;
-	basePos[2].y=Rf/sin30;
-	basePos[2].z=0;
+	basePos[2].y=0;
+	basePos[2].z=Rf/sin30;
 
 	return basePos; // basePos est un pointeur sur tableau de type structure sBase..
 }
-
+/*
 // Calcule les positions cartésiennes des épaules
 sShoulder* shoulder(double Rf)
 {

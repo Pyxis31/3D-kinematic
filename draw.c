@@ -45,13 +45,15 @@ sViewControlArg viewControlArg;
 
 // Variables de la fonction drawing (globales pour gagner du temps CPU à chaque frame)
 GLint uMatrix;
+vec3 dot;
 mat4 projection,view,viewProj,identity,stack[5];
 float aspect_ratio;
 sViewControlRet responseViewControl;
-int loop;
+int loop, lineNb;
 double Lf,Le,Rf,Re;
 sDeltaACS Delta3ACS;
 sDeltaMCS Delta3MCS;
+sBase* pBasePos;
 sWrist* pWristPos;
 sElbow* pElbowAngles;
 
@@ -427,7 +429,7 @@ void drawing(sDrawingArg drawingArg)
 
 		// Calcule les orientations latérales et longitudinales des avant-bras (à la jointure des coudes)
 		pElbowAngles=elbow(Delta3MCS,pWristPos,Lf,Le);
-
+/*
 		// Dessine les trois bras
 		for (loop=0;loop<=2;loop++)
 		{
@@ -497,9 +499,9 @@ void drawing(sDrawingArg drawingArg)
 				pop(stack);
 			
 			// Restitue la matrice de vue originale
-			pop(stack);			
+			pop(stack);	
 		}
-
+*/
 
 
 // *********************
@@ -516,25 +518,32 @@ void drawing(sDrawingArg drawingArg)
 		// Format des attributs de couleurs
 		glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Attribut,Composantes(RVB),Types,...)
 		glEnableVertexAttribArray(1);
-		// Modification dynamique des coordonnées de vertices
-		vec3 data;
-		static int angle;
-		if (angle<=359)
+		
+		// Dessine la plateforme fixe supérieure (base)
+		pBasePos=base(Rf);
+		
+		for (lineNb=0;lineNb<2;lineNb++)
 		{
-			angle+=1;
+			dot[0]=pBasePos[lineNb].x; // X
+			dot[1]=pBasePos[lineNb].y; // Y
+			dot[2]=pBasePos[lineNb].z; // Z
+			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+			dot[0]=pBasePos[lineNb+1].x; // X
+			dot[1]=pBasePos[lineNb+1].y; // Y
+			dot[2]=pBasePos[lineNb+1].z; // Z
+			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+1)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
 		}
-		else
-		{
-			angle=0;
-		}
-		data[0]=0.0; // X
-		data[1]=0.0; // Y
-		data[2]=0.0; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,0*sizeof(sVertex3Dcolor),sizeof(vec3),&data);
-		data[0]=sin(degToRad(angle))*1/2; // X
-		data[1]=cos(degToRad(angle))*1/2; // Y
-		data[2]=0.0; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,1*sizeof(sVertex3Dcolor),sizeof(vec3),&data);
+
+		lineNb=2;
+		dot[0]=pBasePos[lineNb].x; // X
+		dot[1]=pBasePos[lineNb].y; // Y
+		dot[2]=pBasePos[lineNb].z; // Z
+		glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+		dot[0]=pBasePos[lineNb-2].x; // X
+		dot[1]=pBasePos[lineNb-2].y; // Y
+		dot[2]=pBasePos[lineNb-2].z; // Z
+		glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+1)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+		
 
 		// Matrice d'identité
 		glm_mat4_identity(identity);
@@ -550,7 +559,7 @@ void drawing(sDrawingArg drawingArg)
 		// Dessine
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glDrawArrays(GL_LINES,0,2); // (type de primitive,vertex de départ,nombre total de vertices)	
+		glDrawArrays(GL_LINES,0,6); // (type de primitive,vertex de départ,nombre total de vertices)	
 	}
 
 
