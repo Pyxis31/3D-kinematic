@@ -543,7 +543,9 @@ void drawing(sDrawingArg drawingArg)
 		dot[1]=pBasePos[lineNb-2].y; // Y
 		dot[2]=pBasePos[lineNb-2].z; // Z
 		glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+1)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-		
+
+		// Dessine les bras
+				
 
 		// Matrice d'identité
 		glm_mat4_identity(identity);
