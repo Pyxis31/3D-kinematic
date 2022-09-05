@@ -54,8 +54,10 @@ double Lf,Le,Rf,Re;
 sDeltaACS Delta3ACS;
 sDeltaMCS Delta3MCS;
 sBase* pBasePos;
-sWrist* pWristPos;
-sElbow* pElbowAngles;
+sShoulder* pShoulderPos;
+sElbow* pElbowPos;
+//sElbow* pElbowAngles;
+//sWrist* pWristPos;
 
 
 // Initialisation
@@ -420,7 +422,7 @@ void drawing(sDrawingArg drawingArg)
 		Delta3ACS.thetaA=drawingArg.Rotate_sliderValue_Joint1;	// position angulaire du premier bras (degrés)
 		Delta3ACS.thetaB=drawingArg.Rotate_sliderValue_Joint2;	// position angulaire du deuxième bras (degrés)
 		Delta3ACS.thetaC=drawingArg.Rotate_sliderValue_Joint3;	// position angulaire du troisième bras (degrés)
-
+/*
 		// Calcule la position de la nacelle mobile par rapport au repère cartésien du robot (XYZ) 
 		Delta3MCS=forward(Re,Rf,Lf,Le,Delta3ACS);	
 
@@ -429,7 +431,7 @@ void drawing(sDrawingArg drawingArg)
 
 		// Calcule les orientations latérales et longitudinales des avant-bras (à la jointure des coudes)
 		pElbowAngles=elbow(Delta3MCS,pWristPos,Lf,Le);
-/*
+
 		// Dessine les trois bras
 		for (loop=0;loop<=2;loop++)
 		{
@@ -518,6 +520,9 @@ void drawing(sDrawingArg drawingArg)
 		// Format des attributs de couleurs
 		glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Attribut,Composantes(RVB),Types,...)
 		glEnableVertexAttribArray(1);
+		// Format des attributs de texture
+		glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,texture)));	// (Index,Composantes(XY),Types,...)
+		glEnableVertexAttribArray(2);
 		
 		// Dessine la plateforme fixe supérieure (base)
 		pBasePos=base(Rf);
@@ -545,7 +550,17 @@ void drawing(sDrawingArg drawingArg)
 		glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+1)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
 
 		// Dessine les bras
-				
+		pShoulderPos=shoulder(Rf);
+		pElbowPos=elbow(Delta3ACS,Re,Rf,Lf);
+
+		dot[0]=pShoulderPos[0].x; // X
+		dot[1]=pShoulderPos[0].y; // Y
+		dot[2]=pShoulderPos[0].z; // Z
+		glBufferSubData(GL_ARRAY_BUFFER,(6)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+		dot[0]=pElbowPos[0].x; // X
+		dot[1]=pElbowPos[0].y; // Y
+		dot[2]=pElbowPos[0].z; // Z
+		glBufferSubData(GL_ARRAY_BUFFER,(7)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
 
 		// Matrice d'identité
 		glm_mat4_identity(identity);
@@ -561,7 +576,7 @@ void drawing(sDrawingArg drawingArg)
 		// Dessine
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glDrawArrays(GL_LINES,0,6); // (type de primitive,vertex de départ,nombre total de vertices)	
+		glDrawArrays(GL_LINES,0,8); // (type de primitive,vertex de départ,nombre total de vertices)	
 	}
 
 
@@ -605,18 +620,7 @@ void drawing(sDrawingArg drawingArg)
 		//print_mat4(stack[0]);
 
 		// Affiche la position de la nacelle mobile par rapport au repère cartésien du robot (XYZ)
-		printf("MCS : X = %f, Y = %f, Z = %f\n",Delta3MCS.x,Delta3MCS.y,Delta3MCS.z);
-
-		// Affiche les positions des poignets par rapport aux repères cartésiens des bras (XiYiZi)
-		printf("Poignet 0 : X = %f, Y = %f, Z = %f\n",pWristPos[0].x,pWristPos[0].y,pWristPos[0].z);
-		printf("Poignet 1 : X = %f, Y = %f, Z = %f\n",pWristPos[1].x,pWristPos[1].y,pWristPos[1].z);
-		printf("Poignet 2 : X = %f, Y = %f, Z = %f\n",pWristPos[2].x,pWristPos[2].y,pWristPos[2].z);
-/*
-		// Affiche les orientations latérales et longitudinales des avant-bras (à la jointure des coudes)		
-		printf("Coude 0 : q2i = %f, q3i = %f\n",pElbowAngles[0].q2i,pElbowAngles[0].q3i);
-		printf("Coude 1 : q2i = %f, q3i = %f\n",pElbowAngles[1].q2i,pElbowAngles[1].q3i);
-		printf("Coude 2 : q2i = %f, q3i = %f\n",pElbowAngles[2].q2i,pElbowAngles[2].q3i);
-*/		
+		printf("MCS : X = %f, Y = %f, Z = %f\n",Delta3MCS.x,Delta3MCS.y,Delta3MCS.z);	
 	}
 	#endif
 }
