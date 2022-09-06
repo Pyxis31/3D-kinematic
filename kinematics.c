@@ -154,13 +154,13 @@ sElbow* elbow(sDeltaACS ACS,double Re,double Rf,double Lf)
 
 	// elbow B
 	k=-Lf*cos(degToRad(ACS.thetaB))+Rf;
-	elbowPos[1].x=k*cos30;
+	elbowPos[1].x=-k*cos30;
 	elbowPos[1].y=Lf*sin(degToRad(ACS.thetaB));
 	elbowPos[1].z=k*sin30;
 
 	// elbow C
 	k=-Lf*cos(degToRad(ACS.thetaC))+Rf;
-	elbowPos[2].x=-k*cos30;
+	elbowPos[2].x=k*cos30;
 	elbowPos[2].y=Lf*sin(degToRad(ACS.thetaC));
 	elbowPos[2].z=k*sin30;
 

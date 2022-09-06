@@ -553,33 +553,18 @@ void drawing(sDrawingArg drawingArg)
 		pShoulderPos=shoulder(Rf);
 		pElbowPos=elbow(Delta3ACS,Re,Rf,Lf);
 
-		dot[0]=pShoulderPos[0].x; // X
-		dot[1]=pShoulderPos[0].y; // Y
-		dot[2]=pShoulderPos[0].z; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,(6)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-		dot[0]=pElbowPos[0].x; // X
-		dot[1]=pElbowPos[0].y; // Y
-		dot[2]=pElbowPos[0].z; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,(7)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+		for (lineNb=0;lineNb<3;lineNb++)
+		{
+			dot[0]=pShoulderPos[lineNb].x; // X
+			dot[1]=pShoulderPos[lineNb].y; // Y
+			dot[2]=pShoulderPos[lineNb].z; // Z
+			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+6)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+			dot[0]=pElbowPos[lineNb].x; // X
+			dot[1]=pElbowPos[lineNb].y; // Y
+			dot[2]=pElbowPos[lineNb].z; // Z
+			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+7)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+		}
 
-		dot[0]=pShoulderPos[1].x; // X
-		dot[1]=pShoulderPos[1].y; // Y
-		dot[2]=pShoulderPos[1].z; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,(8)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-		dot[0]=pElbowPos[1].x; // X
-		dot[1]=pElbowPos[1].y; // Y
-		dot[2]=pElbowPos[1].z; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,(9)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-/*
-		dot[0]=pShoulderPos[2].x; // X
-		dot[1]=pShoulderPos[2].y; // Y
-		dot[2]=pShoulderPos[2].z; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,(10)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-		dot[0]=pElbowPos[2].x; // X
-		dot[1]=pElbowPos[2].y; // Y
-		dot[2]=pElbowPos[2].z; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,(11)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-*/
 		// Matrice d'identité
 		glm_mat4_identity(identity);
 
@@ -594,7 +579,7 @@ void drawing(sDrawingArg drawingArg)
 		// Dessine
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glDrawArrays(GL_LINES,0,10); // (type de primitive,vertex de départ,nombre total de vertices)	
+		glDrawArrays(GL_LINES,0,12); // (type de primitive,vertex de départ,nombre total de vertices)	
 	}
 
 
