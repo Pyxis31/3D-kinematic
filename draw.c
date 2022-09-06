@@ -562,6 +562,24 @@ void drawing(sDrawingArg drawingArg)
 		dot[2]=pElbowPos[0].z; // Z
 		glBufferSubData(GL_ARRAY_BUFFER,(7)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
 
+		dot[0]=pShoulderPos[1].x; // X
+		dot[1]=pShoulderPos[1].y; // Y
+		dot[2]=pShoulderPos[1].z; // Z
+		glBufferSubData(GL_ARRAY_BUFFER,(8)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+		dot[0]=pElbowPos[1].x; // X
+		dot[1]=pElbowPos[1].y; // Y
+		dot[2]=pElbowPos[1].z; // Z
+		glBufferSubData(GL_ARRAY_BUFFER,(9)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+/*
+		dot[0]=pShoulderPos[2].x; // X
+		dot[1]=pShoulderPos[2].y; // Y
+		dot[2]=pShoulderPos[2].z; // Z
+		glBufferSubData(GL_ARRAY_BUFFER,(10)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+		dot[0]=pElbowPos[2].x; // X
+		dot[1]=pElbowPos[2].y; // Y
+		dot[2]=pElbowPos[2].z; // Z
+		glBufferSubData(GL_ARRAY_BUFFER,(11)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+*/
 		// Matrice d'identité
 		glm_mat4_identity(identity);
 
@@ -576,7 +594,7 @@ void drawing(sDrawingArg drawingArg)
 		// Dessine
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glDrawArrays(GL_LINES,0,8); // (type de primitive,vertex de départ,nombre total de vertices)	
+		glDrawArrays(GL_LINES,0,10); // (type de primitive,vertex de départ,nombre total de vertices)	
 	}
 
 

@@ -114,23 +114,24 @@ sShoulder* shoulder(double Rf)
 	// ********** Déclarations (locales) ************
 	static sShoulder shoulderPos[3];
 	vec3 v;
+	//mat4 v1={0.0,0.0,-Rf,1};
 	// *********** Fin de déclarations **************
 
 	// shoulder A
 	shoulderPos[0].x=0;
-	shoulderPos[0].y=-Rf;
-	shoulderPos[0].z=0;
+	shoulderPos[0].y=0;
+	shoulderPos[0].z=-Rf;
 
 	// shoulder B
 	glm_vec3_copy((vec3){shoulderPos[0].x,shoulderPos[0].y,shoulderPos[0].z},v);
-	glm_vec3_rotate(v,120.0,(vec3){0.0,0.0,1.0});
+	glm_vec3_rotate(v,degToRad(120.0),(vec3){0.0,1.0,0.0});
 	shoulderPos[1].x=v[0];
 	shoulderPos[1].y=v[1];
 	shoulderPos[1].z=v[2];
 
 	// shoulder C
 	glm_vec3_copy((vec3){shoulderPos[0].x,shoulderPos[0].y,shoulderPos[0].z},v);
-	glm_vec3_rotate(v,240.0,(vec3){0.0,0.0,1.0});
+	glm_vec3_rotate(v,degToRad(240.0),(vec3){0.0,1.0,0.0});
 	shoulderPos[2].x=v[0];
 	shoulderPos[2].y=v[1];
 	shoulderPos[2].z=v[2];
@@ -148,20 +149,20 @@ sElbow* elbow(sDeltaACS ACS,double Re,double Rf,double Lf)
 
 	// elbow A
 	elbowPos[0].x=0;
-	elbowPos[0].y=Lf*cos(ACS.thetaA)-Rf;
-	elbowPos[0].z=Lf*sin(ACS.thetaA);
+	elbowPos[0].y=Lf*sin(degToRad(ACS.thetaA));
+	elbowPos[0].z=Lf*cos(degToRad(ACS.thetaA))-Rf;
 
 	// elbow B
-	k=-Lf*cos(ACS.thetaB)+Rf;
+	k=-Lf*cos(degToRad(ACS.thetaB))+Rf;
 	elbowPos[1].x=k*cos30;
-	elbowPos[1].y=k*sin30;
-	elbowPos[1].z=Lf*sin(ACS.thetaB);
+	elbowPos[1].y=Lf*sin(degToRad(ACS.thetaB));
+	elbowPos[1].z=k*sin30;
 
 	// elbow C
-	k=-Lf*cos(ACS.thetaC)+Rf;
+	k=-Lf*cos(degToRad(ACS.thetaC))+Rf;
 	elbowPos[2].x=-k*cos30;
-	elbowPos[2].y=k*sin30;
-	elbowPos[2].z=Lf*sin(ACS.thetaC);
+	elbowPos[2].y=Lf*sin(degToRad(ACS.thetaC));
+	elbowPos[2].z=k*sin30;
 
 	return elbowPos; // elbowPos est un pointeur sur tableau de type structure sElbow..
 }
