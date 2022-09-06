@@ -92,17 +92,17 @@ sBase* base(double Rf)
 
 	// base A
 	basePos[0].x=-Rf/tan30;
-	basePos[0].y=0;
+	basePos[0].y=0.0;
 	basePos[0].z=-Rf;
 
 	// base B
 	basePos[1].x=Rf/tan30;
-	basePos[1].y=0;
+	basePos[1].y=0.0;
 	basePos[1].z=-Rf;
 
 	// base C
-	basePos[2].x=0;
-	basePos[2].y=0;
+	basePos[2].x=0.0;
+	basePos[2].y=0.0;
 	basePos[2].z=Rf/sin30;
 
 	return basePos; // basePos est un pointeur sur tableau de type structure sBase..
@@ -114,12 +114,11 @@ sShoulder* shoulder(double Rf)
 	// ********** Déclarations (locales) ************
 	static sShoulder shoulderPos[3];
 	vec3 v;
-	//mat4 v1={0.0,0.0,-Rf,1};
 	// *********** Fin de déclarations **************
 
 	// shoulder A
-	shoulderPos[0].x=0;
-	shoulderPos[0].y=0;
+	shoulderPos[0].x=0.0;
+	shoulderPos[0].y=0.0;
 	shoulderPos[0].z=-Rf;
 
 	// shoulder B
@@ -148,20 +147,20 @@ sElbow* elbow(sDeltaACS ACS,double Re,double Rf,double Lf)
 	// *********** Fin de déclarations **************
 
 	// elbow A
-	elbowPos[0].x=0;
-	elbowPos[0].y=Lf*sin(degToRad(ACS.thetaA));
-	elbowPos[0].z=Lf*cos(degToRad(ACS.thetaA))-Rf;
+	elbowPos[0].x=0.0;
+	elbowPos[0].y=Lf*sin(degToRad(ACS.thetaA-180.0));
+	elbowPos[0].z=Lf*cos(degToRad(ACS.thetaA-180.0))-Rf;
 
 	// elbow B
-	k=-Lf*cos(degToRad(ACS.thetaB))+Rf;
+	k=-Lf*cos(degToRad(ACS.thetaB-180.0))+Rf;
 	elbowPos[1].x=-k*cos30;
-	elbowPos[1].y=Lf*sin(degToRad(ACS.thetaB));
+	elbowPos[1].y=Lf*sin(degToRad(ACS.thetaB-180.0));
 	elbowPos[1].z=k*sin30;
 
 	// elbow C
-	k=-Lf*cos(degToRad(ACS.thetaC))+Rf;
+	k=-Lf*cos(degToRad(ACS.thetaC-180.0))+Rf;
 	elbowPos[2].x=k*cos30;
-	elbowPos[2].y=Lf*sin(degToRad(ACS.thetaC));
+	elbowPos[2].y=Lf*sin(degToRad(ACS.thetaC-180.0));
 	elbowPos[2].z=k*sin30;
 
 	return elbowPos; // elbowPos est un pointeur sur tableau de type structure sElbow..
@@ -180,12 +179,12 @@ sWrist* wrist(sDeltaMCS MCS,double Re)
 	wristPos[0].z=MCS.z;
 
 	// wrist B
-	wristPos[1].x=MCS.x+sin120*Re;
+	wristPos[1].x=MCS.x-sin120*Re;
 	wristPos[1].y=MCS.y-cos120*Re;
 	wristPos[1].z=MCS.z;
 
 	// wrist C
-	wristPos[2].x=MCS.x-sin120*Re;
+	wristPos[2].x=MCS.x+sin120*Re;
 	wristPos[2].y=MCS.y-cos120*Re;
 	wristPos[2].z=MCS.z;
 

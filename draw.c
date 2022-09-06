@@ -56,6 +56,7 @@ sDeltaMCS Delta3MCS;
 sBase* pBasePos;
 sShoulder* pShoulderPos;
 sElbow* pElbowPos;
+sWrist* pWristPos;
 //sElbow* pElbowAngles;
 //sWrist* pWristPos;
 
@@ -414,18 +415,20 @@ void drawing(sDrawingArg drawingArg)
 	// Delta 3
 	if (frame==2)
 	{
-		// Paramètres du robot delta 3
+		// Dimensions du robot (en mètres)
 		Rf=0.20;	// Rayon de la plateforme fixe supérieure (base)
 		Re=0.05;	// Rayon de la nacelle mobile (wrist)
 		Lf=0.42;	// longueur du bras
 		Le=0.95;	// longueur de l'avant-bras
-		Delta3ACS.thetaA=drawingArg.Rotate_sliderValue_Joint1;	// position angulaire du premier bras (degrés)
-		Delta3ACS.thetaB=drawingArg.Rotate_sliderValue_Joint2;	// position angulaire du deuxième bras (degrés)
-		Delta3ACS.thetaC=drawingArg.Rotate_sliderValue_Joint3;	// position angulaire du troisième bras (degrés)
-/*
+
+		// positions angulaires des bras (degrés)
+		Delta3ACS.thetaA=drawingArg.Rotate_sliderValue_Joint1;
+		Delta3ACS.thetaB=drawingArg.Rotate_sliderValue_Joint2;
+		Delta3ACS.thetaC=drawingArg.Rotate_sliderValue_Joint3;
+
 		// Calcule la position de la nacelle mobile par rapport au repère cartésien du robot (XYZ) 
 		Delta3MCS=forward(Re,Rf,Lf,Le,Delta3ACS);	
-
+/*
 		// Calcule les positions des poignets par rapport aux repères cartésiens des bras (XiYiZi)
 		pWristPos=wrist(Delta3MCS,Rf,Re);
 
@@ -564,6 +567,10 @@ void drawing(sDrawingArg drawingArg)
 			dot[2]=pElbowPos[lineNb].z; // Z
 			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+7)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
 		}
+
+		// Dessine les avant-bras
+		pWristPos=wrist(Delta3MCS,Re);
+		
 
 		// Matrice d'identité
 		glm_mat4_identity(identity);
