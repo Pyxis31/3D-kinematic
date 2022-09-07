@@ -38,51 +38,6 @@
  *************************************************
 */
 
-/*
-// Calcule les positions des poignets par rapport aux repères cartésiens des bras (XiYiZi)
-sWrist* wrist(sDeltaMCS MCS,double Rf,double Re)
-{
-	// ********** Déclarations (locales) ************
-	static sWrist wristPos[3];
-	int i;
-	// *********** Fin de déclarations **************
-
-	// Bras 0=0 degrés, 1=120 degrés, 2=240 degrés (pour un tripod)
-	for (i=0;i<=2;i++)
-	{
-		wristPos[i].x=-Rf+Re+MCS.x*cos(degToRad(i*120))+MCS.y*sin(degToRad(i*120));
-		wristPos[i].y=-MCS.x*sin(degToRad(i*120))+MCS.y*cos(degToRad(i*120));
-		wristPos[i].z=MCS.z;
-	}
-
-	return wristPos; // wristPos est un pointeur sur tableau de type structure sWrist..
-}
-
-
-// Calcule les orientations latérale et longitudinale de l'avant-bras (à la jointure du coude)
-sElbow* elbow(sDeltaMCS MCS,sWrist* pWristPos,double Lf,double Le)
-{
-	// ********** Déclarations (locales) ************
-	static sElbow elbowAngles[3];
-	int i;
-	// *********** Fin de déclarations **************
-
-	// Bras 0=0 degrés, 1=120 degrés, 2=240 degrés (pour un tripod)
-
-	for (i=0;i<=2;i++)
-	{
-		elbowAngles[i].q3i=radToDeg(acos((-MCS.x*sin(degToRad(i*120))+MCS.y*cos(degToRad(i*120)))/Le));
-		elbowAngles[i].q2i=radToDeg(acos((pow(pWristPos[i].x,2)+pow(pWristPos[i].y,2)+pow(pWristPos[i].z,2)-pow(Lf,2)-pow(Le,2))/(2*Lf*Le*sin(degToRad(elbowAngles[i].q3i)))));
-	}
-
-	return elbowAngles; // elbowAngles est un pointeur sur tableau de type structure sElbow..
-}
-*/
-
-// *********************
-// *** TEST newdelta ***
-// *********************
-
 // Calcule les positions cartésiennes de la plateforme fixe supérieure (base)
 sBase* base(double Rf)
 {

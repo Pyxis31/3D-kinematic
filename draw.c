@@ -174,13 +174,16 @@ void init(GtkWidget* pMessages_display)
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Plateforme fixe supérieure (base)
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Epaules
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Bras
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Coudes
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Avant-bras
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Poignets
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // ?
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // ?
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 	};
@@ -428,90 +431,6 @@ void drawing(sDrawingArg drawingArg)
 
 		// Calcule la position de la nacelle mobile par rapport au repère cartésien du robot (XYZ) 
 		Delta3MCS=forward(Re,Rf,Lf,Le,Delta3ACS);	
-/*
-		// Calcule les positions des poignets par rapport aux repères cartésiens des bras (XiYiZi)
-		pWristPos=wrist(Delta3MCS,Rf,Re);
-
-		// Calcule les orientations latérales et longitudinales des avant-bras (à la jointure des coudes)
-		pElbowAngles=elbow(Delta3MCS,pWristPos,Lf,Le);
-
-		// Dessine les trois bras
-		for (loop=0;loop<=2;loop++)
-		{
-			// Sauvegarde la matrice de vue originale
-			push(stack);
-
-				// Bras (Cube VBO 0)
-		
-				// Applique les transformées globales
-				glm_rotate(stack[0],degreesToRadians(loop*120),(vec3){0.0,1.0,0.0}); // Bras 0,1,2 (0,120,240 degrés)
-				glm_translate(stack[0],(vec3){Rf,0.0,0.0}); // Rf
-				switch(loop)
-				{
-					case 0 :
-					glm_rotate(stack[0],degreesToRadians(-Delta3ACS.thetaA),(vec3){0.0,0.0,1.0}); // Inclinaison bras 0
-					break;
-					case 1 :
-					glm_rotate(stack[0],degreesToRadians(-Delta3ACS.thetaB),(vec3){0.0,0.0,1.0}); // Inclinaison bras 1
-					break;
-					case 2 :
-					glm_rotate(stack[0],degreesToRadians(-Delta3ACS.thetaC),(vec3){0.0,0.0,1.0}); // Inclinaison bras 2
-					break;
-				}
-				glm_translate(stack[0],(vec3){(Lf/2),0.0,0.0}); // Lf/2
-
-				// Pousse la pile
-				push(stack);
-					// Applique les transformées locales
-					glm_scale(stack[0],(vec3){Lf, 0.025, 0.025}); // Lf
-
-					// Récupération des ID
-					uMatrix=glGetUniformLocation(program,"uMVP");
-					// Envoi la matrice au shader
-					glUniformMatrix4fv(uMatrix,1,GL_FALSE,(float*)stack[0]);
-
-					// Dessine
-					glEnable(GL_DEPTH_TEST);
-					glDepthFunc(GL_LEQUAL);
-					glDrawArrays(GL_TRIANGLES,0,36); // (type de primitive,vertex de départ,nombre total de vertices)
-				// Remonte la pile
-				pop(stack);
-
-
-				// Avant bras (Cube VBO 0)
-
-				// Applique les transformées globales
-				glm_translate(stack[0],(vec3){(Lf/2),0.0,0.0}); // Lf/2
-				glm_rotate(stack[0],degreesToRadians(-(pElbowAngles[loop].q3i-90)),(vec3){1.0,0.0,0.0}); // q3i : orientation latérale
-				glm_rotate(stack[0],degreesToRadians(-pElbowAngles[loop].q2i),(vec3){0.0,0.0,1.0}); // q2i : orientation longitudinale
-				glm_translate(stack[0],(vec3){(Le/2),0.0,0.0}); // Le/2													
-
-				// Pousse la pile
-				push(stack);
-					// Applique les transformées locales
-					glm_scale(stack[0],(vec3){Le,0.025,0.025}); // Le
-
-					// Récupération des ID
-					uMatrix=glGetUniformLocation(program,"uMVP");
-					// Envoi la matrice au shader
-					glUniformMatrix4fv(uMatrix,1,GL_FALSE,(float*)stack[0]);
-
-					// Dessine
-					glEnable(GL_DEPTH_TEST);
-					glDepthFunc(GL_LEQUAL);
-					glDrawArrays(GL_TRIANGLES,0,36); // (type de primitive,vertex de départ,nombre total de vertices)
-				// Remonte la pile
-				pop(stack);
-			
-			// Restitue la matrice de vue originale
-			pop(stack);	
-		}
-*/
-
-
-// *********************
-// ** TEST newdelta2  **
-// *********************
 
 		// VBO et ses attributs
 		//
@@ -552,10 +471,12 @@ void drawing(sDrawingArg drawingArg)
 		dot[2]=pBasePos[lineNb-2].z; // Z
 		glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+1)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
 
-		// Dessine les bras
+		// Dessine les bras et les avant-bras
 		pShoulderPos=shoulder(Rf);
 		pElbowPos=elbow(Delta3ACS,Re,Rf,Lf);
+		pWristPos=wrist(Delta3MCS,Re);
 
+		// Bras
 		for (lineNb=0;lineNb<3;lineNb++)
 		{
 			dot[0]=pShoulderPos[lineNb].x; // X
@@ -568,9 +489,17 @@ void drawing(sDrawingArg drawingArg)
 			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+7)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
 		}
 
-		// Dessine les avant-bras
-		pWristPos=wrist(Delta3MCS,Re);
-		
+		// Avant-bras
+		dot[0]=pElbowPos[0].x; // X
+		dot[1]=pElbowPos[0].y; // Y
+		dot[2]=pElbowPos[0].z; // Z
+		glBufferSubData(GL_ARRAY_BUFFER,(12)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+		dot[0]=pWristPos[0].x; // X
+		dot[1]=pWristPos[0].y; // Y
+		dot[2]=pWristPos[0].z; // Z
+		glBufferSubData(GL_ARRAY_BUFFER,(13)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+		//system("cls");
+		//printf("Elbow : X = %f, Y = %f, Z = %f\n",pElbowPos[0].x,pElbowPos[0].y,pElbowPos[0].z);
 
 		// Matrice d'identité
 		glm_mat4_identity(identity);
@@ -586,7 +515,7 @@ void drawing(sDrawingArg drawingArg)
 		// Dessine
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glDrawArrays(GL_LINES,0,12); // (type de primitive,vertex de départ,nombre total de vertices)	
+		glDrawArrays(GL_LINES,0,14); // (type de primitive,vertex de départ,nombre total de vertices)	
 	}
 
 
