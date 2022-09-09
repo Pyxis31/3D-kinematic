@@ -186,6 +186,9 @@ void init(GtkWidget* pMessages_display)
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // ?
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // ?
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 	};
 
 
@@ -487,19 +490,17 @@ void drawing(sDrawingArg drawingArg)
 			dot[1]=pElbowPos[lineNb].y; // Y
 			dot[2]=pElbowPos[lineNb].z; // Z
 			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+7)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-		}
 
-		// Avant-bras
-		dot[0]=pElbowPos[0].x; // X
-		dot[1]=pElbowPos[0].y; // Y
-		dot[2]=pElbowPos[0].z; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,(12)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-		dot[0]=pWristPos[0].x; // X
-		dot[1]=pWristPos[0].y; // Y
-		dot[2]=pWristPos[0].z; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,(13)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-		//system("cls");
-		//printf("Elbow : X = %f, Y = %f, Z = %f\n",pElbowPos[0].x,pElbowPos[0].y,pElbowPos[0].z);
+			// Avant-bras
+			dot[0]=pElbowPos[lineNb].x; // X
+			dot[1]=pElbowPos[lineNb].y; // Y
+			dot[2]=pElbowPos[lineNb].z; // Z
+			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+12)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+			dot[0]=pWristPos[lineNb].x; // X
+			dot[1]=pWristPos[lineNb].y; // Y
+			dot[2]=pWristPos[lineNb].z; // Z
+			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+13)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+		}
 
 		// Matrice d'identité
 		glm_mat4_identity(identity);
@@ -515,7 +516,7 @@ void drawing(sDrawingArg drawingArg)
 		// Dessine
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glDrawArrays(GL_LINES,0,14); // (type de primitive,vertex de départ,nombre total de vertices)	
+		glDrawArrays(GL_LINES,0,18); // (type de primitive,vertex de départ,nombre total de vertices)	
 	}
 
 

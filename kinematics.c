@@ -129,19 +129,28 @@ sWrist* wrist(sDeltaMCS MCS,double Re)
 	// *********** Fin de déclarations **************
 
 	// wrist A
+	//wristPos[0].x=MCS.x;
+	//wristPos[0].y=MCS.y-Re;
+	//wristPos[0].z=MCS.z;
 	wristPos[0].x=MCS.x;
-	wristPos[0].y=MCS.y-Re;
 	wristPos[0].z=MCS.z;
+	wristPos[0].y=MCS.y;
 
 	// wrist B
-	wristPos[1].x=MCS.x-sin120*Re;
-	wristPos[1].y=MCS.y-cos120*Re;
+	//wristPos[1].x=MCS.x+sin120*Re;
+	//wristPos[1].y=MCS.y-cos120*Re;
+	//wristPos[1].z=MCS.z;
+	wristPos[1].x=MCS.x;
 	wristPos[1].z=MCS.z;
+	wristPos[1].y=MCS.y;
 
 	// wrist C
-	wristPos[2].x=MCS.x+sin120*Re;
-	wristPos[2].y=MCS.y-cos120*Re;
+	//wristPos[2].x=MCS.x-sin120*Re;
+	//wristPos[2].y=MCS.y-cos120*Re;
+	//wristPos[2].z=MCS.z;
+	wristPos[2].x=MCS.x;
 	wristPos[2].z=MCS.z;
+	wristPos[2].y=MCS.y;
 
 
 	return wristPos; // wristPos est un pointeur sur tableau de type structure sWrist..
@@ -152,7 +161,7 @@ sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS)
 {
 	// ********** Déclarations (locales) ************
 	double t,dtr,y1,z1,y2,x2,z2,y3,x3,z3,dnm,w1,w2,w3,a1,b1,a2,b2,aV,bV,cV,dV;
-	double x,y;
+	//double x,y;
 	sDeltaMCS MCS;
 	// *********** Fin de déclarations **************
 
@@ -205,12 +214,12 @@ sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS)
 	}
 	else
 	{
-		MCS.z = 1*(-0.5*(bV+sqrt(dV))/aV);
-		x = (a1*MCS.z + b1)/dnm;
-		y = (a2*MCS.z + b2)/dnm;
+		MCS.y = 1*(-0.5*(bV+sqrt(dV))/aV);
 		// Rotation de -90° autour de z pour l'alignement du bras 1 avec l'axe des x
-		MCS.x=x*cos270+y*sin270;
-		MCS.y=-x*sin270+y*cos270;
+		//MCS.x=x*cos270+y*sin270;
+		//MCS.y=-x*sin270+y*cos270;
+		MCS.x = (a1*MCS.y + b1)/dnm;
+		MCS.z = (a2*MCS.y + b2)/dnm;
 
 	}
 
