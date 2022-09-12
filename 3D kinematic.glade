@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 
+<!-- Generated with glade 3.40.0 
 
 Copyright (C) 
 
@@ -951,9 +951,9 @@ joint6	LREAL	(Publish Only)</property>
                             <property name="can-focus">False</property>
                             <property name="active">0</property>
                             <items>
-                              <item translatable="yes">Serial 4 axis (SCARA)</item>
-                              <item translatable="yes">Serial 6 axis</item>
-                              <item translatable="yes">Parallel 3 axis (DELTA)</item>
+                              <item translatable="yes">Serial 4-axis (scara)</item>
+                              <item translatable="yes">Serial 6-axis (articulated robot)</item>
+                              <item translatable="yes">Parallel up to 5-axis (delta)</item>
                             </items>
                             <signal name="changed" handler="on_frame_choice_combobox_changed" swapped="no"/>
                           </object>

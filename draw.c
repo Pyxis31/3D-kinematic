@@ -49,7 +49,7 @@ vec3 dot;
 mat4 projection,view,viewProj,identity,stack[5];
 float aspect_ratio;
 sViewControlRet responseViewControl;
-int loop, lineNb;
+int loop,lineNb,dotNb;
 double Lf,Le,Rf,Re;
 sDeltaACS Delta3ACS;
 sDeltaMCS Delta3MCS;
@@ -57,8 +57,6 @@ sBase* pBasePos;
 sShoulder* pShoulderPos;
 sElbow* pElbowPos;
 sWrist* pWristPos;
-//sElbow* pElbowAngles;
-//sWrist* pWristPos;
 
 
 // Initialisation
@@ -171,22 +169,25 @@ void init(GtkWidget* pMessages_display)
 	// Robot delta
 	sVertex3Dcolor delta[]=
 	{
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Plateforme fixe supérieure (base)
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Bras
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Avant-bras
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // ?
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // ?
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // ?
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 	};
@@ -288,31 +289,23 @@ void drawing(sDrawingArg drawingArg)
 	// Range la matrice de vue en tête de la pile
 	glm_mat4_copy(viewProj,stack[0]);
 
-
-	/**********************************************
-	 *********** Modèles hiérarchiques ************
-	 ** Les transformées doivent être appliquées **
-	 *********** dans l'ordre inverse ! ***********
-	 **********************************************
-	*/
-
-	// VBO et ses attributs utilisés pour le SCARA et le Delta 3 
-	//
-	// Bind le VBO
-	glBindBuffer(GL_ARRAY_BUFFER,vboID[0]);
-	// Format des attributs de positions
-	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,position))); // (Index,Composantes(XYZ),Types,...)
-	glEnableVertexAttribArray(0);	
-	// Format des attributs de couleurs
-	glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Index,Composantes(RVB),Types,...)
-	glEnableVertexAttribArray(1);
-	// Format des attributs de texture
-	glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,texture)));	// (Index,Composantes(XY),Types,...)
-	glEnableVertexAttribArray(2);
-
 	// SCARA
 	if (frame==0)
 	{
+		// VBO et ses attributs
+		//
+		// Bind le VBO
+		glBindBuffer(GL_ARRAY_BUFFER,vboID[0]);
+		// Format des attributs de positions
+		glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,position))); // (Index,Composantes(XYZ),Types,...)
+		glEnableVertexAttribArray(0);	
+		// Format des attributs de couleurs
+		glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Index,Composantes(RVB),Types,...)
+		glEnableVertexAttribArray(1);
+		// Format des attributs de texture
+		glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,texture)));	// (Index,Composantes(XY),Types,...)
+		glEnableVertexAttribArray(2);
+	
 		// Pied (Cube VBO 0)
 
 		// Applique les transformées globales
@@ -421,20 +414,6 @@ void drawing(sDrawingArg drawingArg)
 	// Delta 3
 	if (frame==2)
 	{
-		// Dimensions du robot (en mètres)
-		Rf=0.20;	// Rayon de la plateforme fixe supérieure (base)
-		Re=0.05;	// Rayon de la nacelle mobile (wrist)
-		Lf=0.42;	// longueur du bras
-		Le=0.95;	// longueur de l'avant-bras
-
-		// positions angulaires des bras (degrés)
-		Delta3ACS.thetaA=drawingArg.Rotate_sliderValue_Joint1;
-		Delta3ACS.thetaB=drawingArg.Rotate_sliderValue_Joint2;
-		Delta3ACS.thetaC=drawingArg.Rotate_sliderValue_Joint3;
-
-		// Calcule la position de la nacelle mobile par rapport au repère cartésien du robot (XYZ) 
-		Delta3MCS=forward(Re,Rf,Lf,Le,Delta3ACS);	
-
 		// VBO et ses attributs
 		//
 		// Bind le VBO
@@ -449,37 +428,55 @@ void drawing(sDrawingArg drawingArg)
 		glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,texture)));	// (Index,Composantes(XY),Types,...)
 		glEnableVertexAttribArray(2);
 		
-		// Dessine la plateforme fixe supérieure (base)
+		// Dimensions du robot (en mètres)
+		Rf=0.20;	// Rayon de la plateforme fixe supérieure (base)
+		Re=0.05;	// Rayon de la nacelle mobile
+		Lf=0.42;	// longueur des bras
+		Le=0.95;	// longueur des avant-bras
+
+		// positions angulaires des bras
+		Delta3ACS.thetaA=drawingArg.Rotate_sliderValue_Joint1;
+		Delta3ACS.thetaB=drawingArg.Rotate_sliderValue_Joint2;
+		Delta3ACS.thetaC=drawingArg.Rotate_sliderValue_Joint3;
+
+		// Transformée directe (ACS --> MCS)
+		Delta3MCS=forward(Re,Rf,Lf,Le,Delta3ACS);	
+
+		// Points des lignes formant la plateforme fixe supérieure (base)
 		pBasePos=base(Rf);
 		
-		for (lineNb=0;lineNb<2;lineNb++)
+		for (lineNb=0;lineNb<=2;lineNb++)
 		{
-			dot[0]=pBasePos[lineNb].x; // X
-			dot[1]=pBasePos[lineNb].y; // Y
-			dot[2]=pBasePos[lineNb].z; // Z
-			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-			dot[0]=pBasePos[lineNb+1].x; // X
-			dot[1]=pBasePos[lineNb+1].y; // Y
-			dot[2]=pBasePos[lineNb+1].z; // Z
-			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+1)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+			if (lineNb<2)
+			{
+				dot[0]=pBasePos[lineNb].x; // X
+				dot[1]=pBasePos[lineNb].y; // Y
+				dot[2]=pBasePos[lineNb].z; // Z
+				glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+				dot[0]=pBasePos[lineNb+1].x; // X
+				dot[1]=pBasePos[lineNb+1].y; // Y
+				dot[2]=pBasePos[lineNb+1].z; // Z
+				glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+1)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+			}
+			else
+			{
+				dot[0]=pBasePos[lineNb].x; // X
+				dot[1]=pBasePos[lineNb].y; // Y
+				dot[2]=pBasePos[lineNb].z; // Z
+				glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+				dot[0]=pBasePos[lineNb-2].x; // X
+				dot[1]=pBasePos[lineNb-2].y; // Y
+				dot[2]=pBasePos[lineNb-2].z; // Z
+				glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+1)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+			}
 		}
 
-		lineNb=2;
-		dot[0]=pBasePos[lineNb].x; // X
-		dot[1]=pBasePos[lineNb].y; // Y
-		dot[2]=pBasePos[lineNb].z; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-		dot[0]=pBasePos[lineNb-2].x; // X
-		dot[1]=pBasePos[lineNb-2].y; // Y
-		dot[2]=pBasePos[lineNb-2].z; // Z
-		glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+1)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
-
-		// Dessine les bras et les avant-bras
+		// Points des lignes formant les bras et les avant-bras
 		pShoulderPos=shoulder(Rf);
 		pElbowPos=elbow(Delta3ACS,Re,Rf,Lf);
 		pWristPos=wrist(Delta3MCS,Re);
 
-		for (lineNb=0;lineNb<3;lineNb++)
+		for (lineNb=0;lineNb<=2;lineNb++)
 		{
 			// Bras
 			dot[0]=pShoulderPos[lineNb].x; // X
@@ -502,10 +499,15 @@ void drawing(sDrawingArg drawingArg)
 			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+13)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
 		}
 
-		// Dessine la plateforme mobile
-
+		// Points du triangle formant la plateforme mobile
+		for (dotNb=0;dotNb<=2;dotNb++)
+		{
+			dot[0]=pWristPos[dotNb].x; // X
+			dot[1]=pWristPos[dotNb].y; // Y
+			dot[2]=pWristPos[dotNb].z; // Z
+			glBufferSubData(GL_ARRAY_BUFFER,(dotNb+18)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
+		}
 		
-
 		// Matrice d'identité
 		glm_mat4_identity(identity);
 
@@ -520,7 +522,8 @@ void drawing(sDrawingArg drawingArg)
 		// Dessine
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
-		glDrawArrays(GL_LINES,0,18); // (type de primitive,vertex de départ,nombre total de vertices)	
+		glDrawArrays(GL_LINES,0,18); // (type de primitive,vertex de départ,nombre total de vertices)
+		glDrawArrays(GL_TRIANGLES,17,3); // (type de primitive,vertex de départ,nombre total de vertices)
 	}
 
 
