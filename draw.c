@@ -479,9 +479,9 @@ void drawing(sDrawingArg drawingArg)
 		pElbowPos=elbow(Delta3ACS,Re,Rf,Lf);
 		pWristPos=wrist(Delta3MCS,Re);
 
-		// Bras
 		for (lineNb=0;lineNb<3;lineNb++)
 		{
+			// Bras
 			dot[0]=pShoulderPos[lineNb].x; // X
 			dot[1]=pShoulderPos[lineNb].y; // Y
 			dot[2]=pShoulderPos[lineNb].z; // Z
@@ -501,6 +501,10 @@ void drawing(sDrawingArg drawingArg)
 			dot[2]=pWristPos[lineNb].z; // Z
 			glBufferSubData(GL_ARRAY_BUFFER,(lineNb*2+13)*sizeof(sVertex3Dcolor),sizeof(vec3),&dot);
 		}
+
+		// Dessine la plateforme mobile
+
+		
 
 		// Matrice d'identité
 		glm_mat4_identity(identity);
