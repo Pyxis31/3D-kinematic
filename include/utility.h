@@ -46,6 +46,8 @@
 #define tan30	0.577350269189626
 #define sin270	-1.0   
 #define cos270	0.0
+#define sin240	-0.866025403784439 
+#define cos240	0.5
 
 
 // Modèles de structures

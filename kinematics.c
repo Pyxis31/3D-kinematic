@@ -129,29 +129,19 @@ sWrist* wrist(sDeltaMCS MCS,double Re)
 	// *********** Fin de déclarations **************
 
 	// wrist A
-	//wristPos[0].x=MCS.x;
-	//wristPos[0].y=MCS.y-Re;
-	//wristPos[0].z=MCS.z;
-	wristPos[0].x=MCS.x;
-	wristPos[0].z=MCS.z;
+	wristPos[0].x=MCS.x+cos(degToRad(90))*Re;
+	wristPos[0].z=MCS.z-sin(degToRad(90))*Re;
 	wristPos[0].y=MCS.y;
 
 	// wrist B
-	//wristPos[1].x=MCS.x+sin120*Re;
-	//wristPos[1].y=MCS.y-cos120*Re;
-	//wristPos[1].z=MCS.z;
-	wristPos[1].x=MCS.x;
-	wristPos[1].z=MCS.z;
+	wristPos[1].x=MCS.x+cos(degToRad(210))*Re;
+	wristPos[1].z=MCS.z-sin(degToRad(210))*Re;
 	wristPos[1].y=MCS.y;
 
 	// wrist C
-	//wristPos[2].x=MCS.x-sin120*Re;
-	//wristPos[2].y=MCS.y-cos120*Re;
-	//wristPos[2].z=MCS.z;
-	wristPos[2].x=MCS.x;
-	wristPos[2].z=MCS.z;
+	wristPos[2].x=MCS.x+cos(degToRad(330))*Re;
+	wristPos[2].z=MCS.z-sin(degToRad(330))*Re;
 	wristPos[2].y=MCS.y;
-
 
 	return wristPos; // wristPos est un pointeur sur tableau de type structure sWrist..
 }
@@ -175,13 +165,13 @@ sDeltaMCS forward(double Re,double Rf,double Lf,double Le,sDeltaACS ACS)
 	y1 = -(t + Lf*cos(ACS.thetaA));
 	z1 = -Lf*sin(ACS.thetaA);
 
-	y2 = (t + Lf*cos(ACS.thetaB))*sin30;
+	y2 = (t + Lf*cos(ACS.thetaC))*sin30;
 	x2 = y2*tan60;
-	z2 = -Lf*sin(ACS.thetaB);
+	z2 = -Lf*sin(ACS.thetaC);
 
-	y3 = (t + Lf*cos(ACS.thetaC))*sin30;
+	y3 = (t + Lf*cos(ACS.thetaB))*sin30;
 	x3 = -y3*tan60;
-	z3 = -Lf*sin(ACS.thetaC);
+	z3 = -Lf*sin(ACS.thetaB);
 
 	dnm = (y2-y1)*x3-(y3-y1)*x2;
 
