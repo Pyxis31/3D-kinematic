@@ -524,6 +524,23 @@ void drawing(sDrawingArg drawingArg)
 		glDepthFunc(GL_LEQUAL);
 		glDrawArrays(GL_LINES,0,18); // (type de primitive,vertex de départ,nombre total de vertices)
 		glDrawArrays(GL_TRIANGLES,17,3); // (type de primitive,vertex de départ,nombre total de vertices)
+
+		// Axes 4 et 5 du delta 5
+		//if (delta5)..
+		// VBO et ses attributs
+		//
+		// Bind le VBO
+		glBindBuffer(GL_ARRAY_BUFFER,vboID[0]);
+		// Format des attributs de positions
+		glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,position))); // (Index,Composantes(XYZ),Types,...)
+		glEnableVertexAttribArray(0);	
+		// Format des attributs de couleurs
+		glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Index,Composantes(RVB),Types,...)
+		glEnableVertexAttribArray(1);
+		// Format des attributs de texture
+		glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,texture)));	// (Index,Composantes(XY),Types,...)
+		glEnableVertexAttribArray(2);
+		
 	}
 
 
