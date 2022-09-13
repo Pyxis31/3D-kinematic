@@ -169,27 +169,27 @@ void init(GtkWidget* pMessages_display)
 	// Robot delta
 	sVertex3Dcolor delta[]=
 	{
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Base
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Bras
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}}, // Avant-bras
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
 		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
-		{{0.0,0.0,0.0},	{0.0,1.0,1.0},	{0,0}},
+		{{0.0,0.0,0.0},	{181.0/255.0,176.0/255.0,161.0/255.0},	{0,0}}, // Nacelle mobile
+		{{0.0,0.0,0.0},	{181.0/255.0,176.0/255.0,161.0/255.0},	{1,0}},
+		{{0.0,0.0,0.0},	{181.0/255.0,176.0/255.0,161.0/255.0},	{1,1}},
 	};
 
 
@@ -540,7 +540,30 @@ void drawing(sDrawingArg drawingArg)
 		// Format des attributs de texture
 		glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,texture)));	// (Index,Composantes(XY),Types,...)
 		glEnableVertexAttribArray(2);
+
+		// Axe 4 (Cube VBO 0)
+
+		// Applique les transformées globales
+		glm_translate(stack[0],(vec3){Delta3MCS.x,Delta3MCS.y-0.025,Delta3MCS.z});
+
+		// Pousse la pile
+		push(stack);
+
+			// Applique les transformées locales
+			glm_scale(stack[0],(vec3){0.02,0.05,0.02}); // Mise à l'échelle du cube
+
+			// Récupération des ID
+			uMatrix=glGetUniformLocation(program,"uMVP");
+			// Envoi la matrice au shader
+			glUniformMatrix4fv(uMatrix,1,GL_FALSE,(float*)stack[0]);
+
+			// Dessine
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+			glDrawArrays(GL_TRIANGLES,0,36); // (type de primitive,vertex de départ,nombre total de vertices)
 		
+		// Remonte la pile
+		pop(stack);
 	}
 
 
