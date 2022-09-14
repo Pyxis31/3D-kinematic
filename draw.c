@@ -59,7 +59,7 @@ sElbow* pElbowPos;
 sWrist* pWristPos;
 
 
-// Initialisation
+// INITIALISATIONS
 void init(GtkWidget* pMessages_display)
 {
 	// ********** Déclarations (locales) ************
@@ -70,7 +70,7 @@ void init(GtkWidget* pMessages_display)
 	int numVBOs, numVAOs, numTEXTs;
 	// *********** Fin de déclarations **************	
 
-    /****************************************** 
+	/****************************************** 
 	 ******* Initialisation des shaders *******
 	 ******************************************
 	*/
@@ -110,7 +110,7 @@ void init(GtkWidget* pMessages_display)
 	glDeleteShader(responseLdShaVS.shader);
 	glDeleteShader(responseLdShaFS.shader);
 
-    /******************************************
+	/******************************************
 	 *                Modèles                 *
 	 ******************************************
 	*/
@@ -193,7 +193,7 @@ void init(GtkWidget* pMessages_display)
 	};
 
 
-    /***************************************************
+	/***************************************************
 	 * VAO : spécifie les formats des attributs au GPU *
 	 ***************************************************
 	*/
@@ -204,7 +204,7 @@ void init(GtkWidget* pMessages_display)
 	glBindVertexArray(vaoID[0]);
 	
 
-    /********************************************************
+	/********************************************************
 	 * VBO : charge les attributs des vertices dans le GPU  *
 	 ********************************************************
 	*/
@@ -228,7 +228,7 @@ void init(GtkWidget* pMessages_display)
 	glBufferData(GL_ARRAY_BUFFER,sizeof(delta),delta,GL_STREAM_DRAW);
 
 
-    /****************************************
+	/****************************************
 	 * TEXTURE : charge un fichier image	*
 	 * en tant que nouvelle texture OpenGL	*
 	 ****************************************
@@ -252,10 +252,9 @@ void init(GtkWidget* pMessages_display)
 	fMessage(responseLdTexture.pcharMessFnc,pMessages_display);
 	// Libère le tas
 	free(responseLdTexture.pcharMessFnc);
-}
+	}
 
-
-// Affichage
+// AFFICHAGE
 void drawing(sDrawingArg drawingArg)
 {
 	// ********** Déclarations (locales) ************
@@ -411,7 +410,7 @@ void drawing(sDrawingArg drawingArg)
 		pop(stack);
 	}
 
-	// Delta 3
+	// DELTA
 	if (frame==2)
 	{
 		// VBO et ses attributs
@@ -544,13 +543,16 @@ void drawing(sDrawingArg drawingArg)
 		// Axe 4 (Cube VBO 0)
 
 		// Applique les transformées globales
-		glm_translate(stack[0],(vec3){Delta3MCS.x,Delta3MCS.y-0.025,Delta3MCS.z});
+		glm_translate(stack[0],(vec3){Delta3MCS.x,Delta3MCS.y,Delta3MCS.z});
+		glm_rotate(stack[0],degreesToRadians(drawingArg.Rotate_sliderValue_Joint4),(vec3){0.0,1.0,0.0});
 
 		// Pousse la pile
 		push(stack);
 
 			// Applique les transformées locales
-			glm_scale(stack[0],(vec3){0.02,0.05,0.02}); // Mise à l'échelle du cube
+			glm_scale(stack[0],(vec3){0.02,0.05,0.02});
+			glm_translate(stack[0],(vec3){0.0,-0.5,0.0});
+			
 
 			// Récupération des ID
 			uMatrix=glGetUniformLocation(program,"uMVP");
@@ -564,41 +566,68 @@ void drawing(sDrawingArg drawingArg)
 		
 		// Remonte la pile
 		pop(stack);
+
+		// Axe 5 (Cube VBO 0)
+
+		// Applique les transformées globales
+		;
+
+		// Pousse la pile
+		//push(stack);
+
+			// Applique les transformées locales
+			glm_translate(stack[0],(vec3){0.0,-0.05,0.0});
+			glm_rotate(stack[0],degreesToRadians(drawingArg.Rotate_sliderValue_Joint5),(vec3){0.0,0.0,1.0});
+			glm_translate(stack[0],(vec3){0.0,-0.025,0.0});
+			glm_scale(stack[0],(vec3){0.02,0.05,0.02});
+
+			// Récupération des ID
+			uMatrix=glGetUniformLocation(program,"uMVP");
+			// Envoi la matrice au shader
+			glUniformMatrix4fv(uMatrix,1,GL_FALSE,(float*)stack[0]);
+
+			// Dessine
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+			glDrawArrays(GL_TRIANGLES,0,36); // (type de primitive,vertex de départ,nombre total de vertices)
+		
+		// Remonte la pile
+		//pop(stack);
 	}
 
+	// REPERE CARTESIEN
+	;{
+	// VBO et ses attributs utilisés pour le repère cartésien 
+	//
+	// Bind le VBO
+	glBindBuffer(GL_ARRAY_BUFFER,vboID[1]);
+	// Format des attributs de positions
+	glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,position))); // (Attribut,Composantes(XYZ),Types,...)
+	glEnableVertexAttribArray(0);	
+	// Format des attributs de couleurs
+	glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Attribut,Composantes(RVB),Types,...)
+	glEnableVertexAttribArray(1);
 
-	#ifndef Repère_Cartésien_OpenGL
-		// VBO et ses attributs utilisés pour le repère cartésien 
-		//
-		// Bind le VBO
-		glBindBuffer(GL_ARRAY_BUFFER,vboID[1]);
-		// Format des attributs de positions
-		glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,position))); // (Attribut,Composantes(XYZ),Types,...)
-		glEnableVertexAttribArray(0);	
-		// Format des attributs de couleurs
-		glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Attribut,Composantes(RVB),Types,...)
-		glEnableVertexAttribArray(1);
+	// Repère cartésien (Lignes VBO 1)
 
-		// Repère cartésien (Lignes VBO 1)
+	// Matrice d'identité
+	glm_mat4_identity(identity);
 
-		// Matrice d'identité
-		glm_mat4_identity(identity);
+	// MVP
+	glm_mat4_mul(viewProj,identity,stack[0]);
 
-		// MVP
-		glm_mat4_mul(viewProj,identity,stack[0]);
+	// Récupération des ID
+	uMatrix=glGetUniformLocation(program,"uMVP");
+	// Envoi la matrice au shader
+	glUniformMatrix4fv(uMatrix,1,GL_FALSE,(float*)stack[0]);
 
-		// Récupération des ID
-		uMatrix=glGetUniformLocation(program,"uMVP");
-		// Envoi la matrice au shader
-		glUniformMatrix4fv(uMatrix,1,GL_FALSE,(float*)stack[0]);
+	// Dessine
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+	glDrawArrays(GL_LINES,0,6); // (type de primitive,vertex de départ,nombre total de vertices)
+	;}
 
-		// Dessine
-		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
-		glDrawArrays(GL_LINES,0,6); // (type de primitive,vertex de départ,nombre total de vertices)
-	#endif
-
-	#ifndef Débug
+	// DEBUG
 	if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(pF_trans_check_button)))
 	{
 		system("cls");
@@ -609,11 +638,9 @@ void drawing(sDrawingArg drawingArg)
 		// Affiche la position de la nacelle mobile par rapport au repère cartésien du robot (XYZ)
 		printf("MCS : X = %f, Y = %f, Z = %f\n",Delta3MCS.x,Delta3MCS.y,Delta3MCS.z);	
 	}
-	#endif
 }
 
-
-// Clôture
+// CLOTURE
 void ending()
 {
 	// Libération des ressources
@@ -621,3 +648,4 @@ void ending()
 	glDeleteBuffers(3,vboID);			// (nombre de buffer(s) à supprimer, buffer(s))
 	glDeleteVertexArrays(1,vaoID);
 }
+
