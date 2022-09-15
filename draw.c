@@ -8,6 +8,7 @@
 #include <gtk/gtk.h>		// Gimp Tool Kit
 #include <epoxy/gl.h>		// OpenGL
 #include <unistd.h>			// getcwd
+#include <fsjslib.h>		// Entry parser
 
 
 // Des Headers situés dans le répertoire de l'application
@@ -30,6 +31,7 @@
 // Externes
 extern GtkWidget *pProjMatrix_switch,*pAspect_switch,*pF_trans_check_button,*pWireframe_switch;
 extern int frame;
+extern double *pEntry_Rf;
 extern sArgsComputeThread computeThreadArgs;
 
 // Types de base
@@ -49,8 +51,10 @@ vec3 dot;
 mat4 projection,view,viewProj,identity,stack[5];
 float aspect_ratio;
 sViewControlRet responseViewControl;
+sfEisIntFloat EntryParser;
 int loop,lineNb,dotNb;
-double Lf,Le,Rf,Re;
+double Lf,Le,Rf,Re,yawRot,pitchRot,Nr1,Dr1,Nr12,Dr12,L1,DX,DY,DZ; // Paramètre d'un delta 5
+const char* pcharEntry_Rf;
 sDeltaACS Delta3ACS;
 sDeltaMCS Delta3MCS;
 sBase* pBasePos;
@@ -252,6 +256,22 @@ void init(GtkWidget* pMessages_display)
 	fMessage(responseLdTexture.pcharMessFnc,pMessages_display);
 	// Libère le tas
 	free(responseLdTexture.pcharMessFnc);
+
+	// Paramètres du delta 3 (en mètres)
+	Rf=0.20;	// Rayon de la plateforme fixe supérieure (base)
+	Re=0.05;	// Rayon de la nacelle mobile
+	Lf=0.42;	// Longueur des bras
+	Le=0.95;	// Longueur des avant-bras
+
+	// Paramètres du poignet du delta 5 (en mètres)
+	L1=0.05;	// Longueur du bras balancier
+	DX=0.0;		// Offset par raport au TCP du delta
+	DY=0.0;		// Offset par raport au TCP du delta
+	DZ=0.05;	// Offset par raport au TCP du delta
+	Nr1=1;		// Numérateur du ratio axe 1/rotation yaw du poignet
+	Dr1=2;		// Dénominateur du ratio axe 1/rotation yaw du poignet
+	Nr12=1;		// Numérateur du ratio axe 2/rotation pitch du bras balancier
+	Dr12=2;		// Dénominateur du ratio axe 2/rotation pitch du bras balancier
 	}
 
 // AFFICHAGE
@@ -411,7 +431,7 @@ void drawing(sDrawingArg drawingArg)
 	}
 
 	// DELTA
-	if (frame==2)
+	if (frame==2 || frame==3)
 	{
 		// VBO et ses attributs
 		//
@@ -426,12 +446,28 @@ void drawing(sDrawingArg drawingArg)
 		// Format des attributs de texture
 		glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,texture)));	// (Index,Composantes(XY),Types,...)
 		glEnableVertexAttribArray(2);
-		
-		// Dimensions du robot (en mètres)
-		Rf=0.20;	// Rayon de la plateforme fixe supérieure (base)
-		Re=0.05;	// Rayon de la nacelle mobile
-		Lf=0.42;	// longueur des bras
-		Le=0.95;	// longueur des avant-bras
+
+		// Récupère le contenu alphanumérique des zones de saisies
+		pcharEntry_Rf=gtk_entry_get_text(GTK_ENTRY(pEntry_Rf));		
+				
+		// Analyse les caractères saisis
+		EntryParser.pcharEntry=pcharEntry_Rf;
+		EntryParser.type=typeFloat;
+		EntryParser.min=-DBL_MAX; // limite basse
+		EntryParser.max=DBL_MAX; // limite haute
+		fEntryIsIntOrFloat(&EntryParser);
+		if (EntryParser.errNumber!=0)
+		{
+			//sprintf(pcharMessage,EntryParser.pcharErrMessage);
+			//fMessage(pcharMessage);
+			return;
+		}
+		else
+		{
+			//sprintf(pcharMessage," ");
+			//fMessage(pcharMessage);
+			Rf=EntryParser.doubleResult;
+		}
 
 		// positions angulaires des bras
 		Delta3ACS.thetaA=drawingArg.Rotate_sliderValue_Joint1;
@@ -525,74 +561,76 @@ void drawing(sDrawingArg drawingArg)
 		glDrawArrays(GL_TRIANGLES,17,3); // (type de primitive,vertex de départ,nombre total de vertices)
 
 		// Axes 4 et 5 du delta 5
-		//if (delta5)..
-		// VBO et ses attributs
-		//
-		// Bind le VBO
-		glBindBuffer(GL_ARRAY_BUFFER,vboID[0]);
-		// Format des attributs de positions
-		glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,position))); // (Index,Composantes(XYZ),Types,...)
-		glEnableVertexAttribArray(0);	
-		// Format des attributs de couleurs
-		glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Index,Composantes(RVB),Types,...)
-		glEnableVertexAttribArray(1);
-		// Format des attributs de texture
-		glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,texture)));	// (Index,Composantes(XY),Types,...)
-		glEnableVertexAttribArray(2);
+		if (frame==3)
+		{
+			// VBO et ses attributs
+			//
+			// Bind le VBO
+			glBindBuffer(GL_ARRAY_BUFFER,vboID[0]);
+			// Format des attributs de positions
+			glVertexAttribPointer(0,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,position))); // (Index,Composantes(XYZ),Types,...)
+			glEnableVertexAttribArray(0);	
+			// Format des attributs de couleurs
+			glVertexAttribPointer(1,3,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,color)));	// (Index,Composantes(RVB),Types,...)
+			glEnableVertexAttribArray(1);
+			// Format des attributs de texture
+			glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,texture)));	// (Index,Composantes(XY),Types,...)
+			glEnableVertexAttribArray(2);
 
-		// Axe 4 (Cube VBO 0)
+			// Joint 4 (axe 1 poignet) (Cube VBO 0)
+			yawRot=drawingArg.Rotate_sliderValue_Joint4*(Nr1/Dr1);
 
-		// Applique les transformées globales
-		glm_translate(stack[0],(vec3){Delta3MCS.x,Delta3MCS.y,Delta3MCS.z});
-		glm_rotate(stack[0],degreesToRadians(drawingArg.Rotate_sliderValue_Joint4),(vec3){0.0,1.0,0.0});
+			// Applique les transformées globales
+			glm_translate(stack[0],(vec3){Delta3MCS.x+DX,Delta3MCS.y,Delta3MCS.z-DY});
+			glm_rotate(stack[0],degreesToRadians(yawRot),(vec3){0.0,1.0,0.0});
 
-		// Pousse la pile
-		push(stack);
+			// Pousse la pile
+			push(stack);
 
-			// Applique les transformées locales
-			glm_scale(stack[0],(vec3){0.02,0.05,0.02});
-			glm_translate(stack[0],(vec3){0.0,-0.5,0.0});
+				// Applique les transformées locales
+				glm_scale(stack[0],(vec3){0.02,DZ,0.02});
+				glm_translate(stack[0],(vec3){0.0,-0.5,0.0});
+				
+				// Récupération des ID
+				uMatrix=glGetUniformLocation(program,"uMVP");
+				// Envoi la matrice au shader
+				glUniformMatrix4fv(uMatrix,1,GL_FALSE,(float*)stack[0]);
+
+				// Dessine
+				glEnable(GL_DEPTH_TEST);
+				glDepthFunc(GL_LEQUAL);
+				glDrawArrays(GL_TRIANGLES,0,36); // (type de primitive,vertex de départ,nombre total de vertices)
 			
+			// Remonte la pile
+			pop(stack);
 
-			// Récupération des ID
-			uMatrix=glGetUniformLocation(program,"uMVP");
-			// Envoi la matrice au shader
-			glUniformMatrix4fv(uMatrix,1,GL_FALSE,(float*)stack[0]);
+			// Joint 5 (axe 2 poignet) (Cube VBO 0)
+			pitchRot=(yawRot+drawingArg.Rotate_sliderValue_Joint5)*(Nr12/Dr12);
 
-			// Dessine
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LEQUAL);
-			glDrawArrays(GL_TRIANGLES,0,36); // (type de primitive,vertex de départ,nombre total de vertices)
-		
-		// Remonte la pile
-		pop(stack);
+			// Applique les transformées globales
 
-		// Axe 5 (Cube VBO 0)
+			// Pousse la pile
+			//push(stack);
 
-		// Applique les transformées globales
-		;
+				// Applique les transformées locales
+				glm_translate(stack[0],(vec3){0.0,-DZ,0.0});
+				glm_rotate(stack[0],degreesToRadians(pitchRot),(vec3){0.0,0.0,1.0});
+				glm_translate(stack[0],(vec3){0.0,-L1/2,0.0});
+				glm_scale(stack[0],(vec3){0.02,L1,0.02});
 
-		// Pousse la pile
-		//push(stack);
+				// Récupération des ID
+				uMatrix=glGetUniformLocation(program,"uMVP");
+				// Envoi la matrice au shader
+				glUniformMatrix4fv(uMatrix,1,GL_FALSE,(float*)stack[0]);
 
-			// Applique les transformées locales
-			glm_translate(stack[0],(vec3){0.0,-0.05,0.0});
-			glm_rotate(stack[0],degreesToRadians(drawingArg.Rotate_sliderValue_Joint5),(vec3){0.0,0.0,1.0});
-			glm_translate(stack[0],(vec3){0.0,-0.025,0.0});
-			glm_scale(stack[0],(vec3){0.02,0.05,0.02});
-
-			// Récupération des ID
-			uMatrix=glGetUniformLocation(program,"uMVP");
-			// Envoi la matrice au shader
-			glUniformMatrix4fv(uMatrix,1,GL_FALSE,(float*)stack[0]);
-
-			// Dessine
-			glEnable(GL_DEPTH_TEST);
-			glDepthFunc(GL_LEQUAL);
-			glDrawArrays(GL_TRIANGLES,0,36); // (type de primitive,vertex de départ,nombre total de vertices)
-		
-		// Remonte la pile
-		//pop(stack);
+				// Dessine
+				glEnable(GL_DEPTH_TEST);
+				glDepthFunc(GL_LEQUAL);
+				glDrawArrays(GL_TRIANGLES,0,36); // (type de primitive,vertex de départ,nombre total de vertices)
+			
+			// Remonte la pile
+			//pop(stack);
+		}
 	}
 
 	// REPERE CARTESIEN

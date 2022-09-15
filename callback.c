@@ -59,7 +59,8 @@ GtkWidget 	*pMaFenetre,*pAbout_dialog,*pMessages_display,*p3Dview,*pRotate_slide
 			*pImu_check_button,*pCompass_value,*pPitch_value,*pRoll_value,*pGpu_period,*pGpu_frequency,*pGpu_opengl_ver,
 			*pGpu_renderer_type,*pGpu_shading_lang_ver,*pGpu_manufacturer,*pCross_button,*pArrows_button,
 			*pProjMatrix_switch,*pAspect_switch,*pF_trans_check_button,*pWireframe_switch,*pZero_button,
-			*pFOVy_slider,*pJoint_choice_combobox,*pOpc_check_button,*pPlc_ip_address_entry,*pFrame_choice_combobox;
+			*pFOVy_slider,*pJoint_choice_combobox,*pOpc_check_button,*pPlc_ip_address_entry,*pFrame_choice_combobox,
+			*pRobotsSettings_dialog,*pEntry_Rf;
 	
 /**********************************************
  ************ Fonctions callback **************
@@ -106,6 +107,8 @@ G_MODULE_EXPORT void on_window1_map_event(GtkWindow* pWindow,gpointer pData)
 	pOpc_check_button=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"opc_check_button"));
 	pPlc_ip_address_entry=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"plc_ip_address_entry"));
 	pFrame_choice_combobox=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"frame_choice_combobox"));
+	pRobotsSettings_dialog=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"robotsSettings_dialog"));
+	pEntry_Rf=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Rf"));
 
 	
 	// Configuration du widget rotate_slider_joints
@@ -196,7 +199,7 @@ G_MODULE_EXPORT void on_window1_destroy_event(GtkWindow* pWindow,gpointer pData)
 }
 
 
-// Menu "A propos"
+// Pop-up "A propos"
 G_MODULE_EXPORT void on_about_button_clicked(GtkButton* pButton,gpointer pData)
 {
 	// ********** Déclarations (locales) ************
@@ -521,10 +524,30 @@ G_MODULE_EXPORT void on_frame_choice_combobox_changed(GtkComboBox* pCombo,gpoint
 
 	// *********** Fin de déclarations **************
 	
-	if (strcmp(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(pFrame_choice_combobox)),"Serial 4 axis (SCARA)")==0)
+	if (strcmp(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(pFrame_choice_combobox)),"Serial 4-axis")==0)
 		frame=0;
-	else if (strcmp(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(pFrame_choice_combobox)),"Serial 6 axis")==0)
+	else if (strcmp(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(pFrame_choice_combobox)),"Serial 6-axis")==0)
 		frame=1;
-	else if (strcmp(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(pFrame_choice_combobox)),"Parallel 3 axis (DELTA)")==0)
+	else if (strcmp(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(pFrame_choice_combobox)),"Parallel 3-axis")==0)
 		frame=2;
+	else if (strcmp(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(pFrame_choice_combobox)),"Parallel 5-axis")==0)
+		frame=3;
+}
+
+
+// Pop-up paramètres des robots
+G_MODULE_EXPORT void on_robotsSettings_button_clicked(GtkButton* pButton,gpointer pData)
+{
+	// ********** Déclarations (locales) ************
+
+	// *********** Fin de déclarations **************
+	
+	// Affiche (show) le widget et bloc l'exécution du programme dans l'attente d'une réponse
+	gtk_dialog_run(GTK_DIALOG(pRobotsSettings_dialog));
+	
+	/*
+	 * Dès que la fonction gtk_dialog_run sort de sa boucle récursive,
+	 * cette fonction cache le widget mais ne le détruit pas
+	 */
+	gtk_widget_hide(pRobotsSettings_dialog);
 }
