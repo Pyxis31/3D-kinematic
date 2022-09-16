@@ -29,9 +29,10 @@
 */
 
 // Externes
-extern GtkWidget *pProjMatrix_switch,*pAspect_switch,*pF_trans_check_button,*pWireframe_switch;
+extern GtkWidget 	*pProjMatrix_switch,*pAspect_switch,*pF_trans_check_button,*pWireframe_switch,*pRobotsSettings_dialog,
+					*pEntry_Rf,*pEntry_Re,*pEntry_Lf,*pEntry_Le,*pEntry_L1,*pEntry_DX,*pEntry_DY,*pEntry_DZ,*pEntry_Nr1,
+					*pEntry_Dr1,*pEntry_Nr12,*pEntry_Dr12;
 extern int frame;
-extern double *pEntry_Rf;
 extern sArgsComputeThread computeThreadArgs;
 
 // Types de base
@@ -42,6 +43,7 @@ GLuint program,vboID[3],vaoID[1],textureID;
 sViewControlArg viewControlArg;
 
 // Pointeurs (sur tableaux, sur chaînes, etc.)
+FILE *pFileSettings;
 
 // Pointeurs de widgets de l'interface
 
@@ -53,8 +55,9 @@ float aspect_ratio;
 sViewControlRet responseViewControl;
 sfEisIntFloat EntryParser;
 int loop,lineNb,dotNb;
-double Lf,Le,Rf,Re,yawRot,pitchRot,Nr1,Dr1,Nr12,Dr12,L1,DX,DY,DZ; // Paramètre d'un delta 5
-const char* pcharEntry_Rf;
+double Lf,Le,Rf,Re,yawRot,pitchRot,Nr1,Dr1,Nr12,Dr12,L1,DX,DY,DZ,Pn[12]; // Paramètre d'un delta 5
+const char* pcharEntry[12];
+char pcharMessage[50+1]="";
 sDeltaACS Delta3ACS;
 sDeltaMCS Delta3MCS;
 sBase* pBasePos;
@@ -72,7 +75,10 @@ void init(GtkWidget* pMessages_display)
 	sReturnFnc_LdTex responseLdTexture;
 	char pathToFile[UCHAR_MAX];
 	int numVBOs, numVAOs, numTEXTs;
-	// *********** Fin de déclarations **************	
+	// *********** Fin de déclarations **************
+
+	// Ouvre le fichier de paramètres
+	pFileSettings=fopen("3D_kinematic_settings.txt", "w");
 
 	/****************************************** 
 	 ******* Initialisation des shaders *******
@@ -257,21 +263,19 @@ void init(GtkWidget* pMessages_display)
 	// Libère le tas
 	free(responseLdTexture.pcharMessFnc);
 
-	// Paramètres du delta 3 (en mètres)
-	Rf=0.20;	// Rayon de la plateforme fixe supérieure (base)
-	Re=0.05;	// Rayon de la nacelle mobile
-	Lf=0.42;	// Longueur des bras
-	Le=0.95;	// Longueur des avant-bras
-
-	// Paramètres du poignet du delta 5 (en mètres)
-	L1=0.05;	// Longueur du bras balancier
-	DX=0.0;		// Offset par raport au TCP du delta
-	DY=0.0;		// Offset par raport au TCP du delta
-	DZ=0.05;	// Offset par raport au TCP du delta
-	Nr1=1;		// Numérateur du ratio axe 1/rotation yaw du poignet
-	Dr1=2;		// Dénominateur du ratio axe 1/rotation yaw du poignet
-	Nr12=1;		// Numérateur du ratio axe 2/rotation pitch du bras balancier
-	Dr12=2;		// Dénominateur du ratio axe 2/rotation pitch du bras balancier
+	// Récupère les paramètres initiaux du delta
+	Rf=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Rf)));
+	Re=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Re)));
+	Lf=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Lf)));
+	Le=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Le)));
+	L1=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_L1)));
+	DX=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_DX)));		
+	DY=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_DY)));
+	DZ=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_DZ)));
+	Nr1=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Nr1)));
+	Dr1=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Dr1)));
+	Nr12=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Nr12)));
+	Dr12=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Dr12)));
 	}
 
 // AFFICHAGE
@@ -447,26 +451,58 @@ void drawing(sDrawingArg drawingArg)
 		glVertexAttribPointer(2,2,GL_FLOAT,GL_FALSE,sizeof(sVertex3Dcolor),(const GLvoid*) (G_STRUCT_OFFSET(sVertex3Dcolor,texture)));	// (Index,Composantes(XY),Types,...)
 		glEnableVertexAttribArray(2);
 
-		// Récupère le contenu alphanumérique des zones de saisies
-		pcharEntry_Rf=gtk_entry_get_text(GTK_ENTRY(pEntry_Rf));		
-				
-		// Analyse les caractères saisis
-		EntryParser.pcharEntry=pcharEntry_Rf;
-		EntryParser.type=typeFloat;
-		EntryParser.min=-DBL_MAX; // limite basse
-		EntryParser.max=DBL_MAX; // limite haute
-		fEntryIsIntOrFloat(&EntryParser);
-		if (EntryParser.errNumber!=0)
+		// Analyse la saisie des paramètres
+		if (gtk_window_is_active(GTK_WINDOW(pRobotsSettings_dialog)))
 		{
-			//sprintf(pcharMessage,EntryParser.pcharErrMessage);
-			//fMessage(pcharMessage);
-			return;
-		}
-		else
-		{
-			//sprintf(pcharMessage," ");
-			//fMessage(pcharMessage);
-			Rf=EntryParser.doubleResult;
+			// Récupère le contenu alphanumérique des zones de saisies
+			pcharEntry[0]=gtk_entry_get_text(GTK_ENTRY(pEntry_Rf));
+			pcharEntry[1]=gtk_entry_get_text(GTK_ENTRY(pEntry_Re));
+			pcharEntry[2]=gtk_entry_get_text(GTK_ENTRY(pEntry_Lf));
+			pcharEntry[3]=gtk_entry_get_text(GTK_ENTRY(pEntry_Le));
+			pcharEntry[4]=gtk_entry_get_text(GTK_ENTRY(pEntry_L1));
+			pcharEntry[5]=gtk_entry_get_text(GTK_ENTRY(pEntry_DX));		
+			pcharEntry[6]=gtk_entry_get_text(GTK_ENTRY(pEntry_DY));
+			pcharEntry[7]=gtk_entry_get_text(GTK_ENTRY(pEntry_DZ));
+			pcharEntry[8]=gtk_entry_get_text(GTK_ENTRY(pEntry_Nr1));
+			pcharEntry[9]=gtk_entry_get_text(GTK_ENTRY(pEntry_Dr1));
+			pcharEntry[10]=gtk_entry_get_text(GTK_ENTRY(pEntry_Nr12));
+			pcharEntry[11]=gtk_entry_get_text(GTK_ENTRY(pEntry_Dr12));
+
+			// Analyse les caractères saisis
+			for (loop=0;loop<=11;loop++)
+			{
+				EntryParser.pcharEntry=pcharEntry[loop];
+				EntryParser.type=typeFloat;
+				EntryParser.min=-DBL_MAX; // limite basse
+				EntryParser.max=DBL_MAX; // limite haute
+				fEntryIsIntOrFloat(&EntryParser);
+				if (EntryParser.errNumber!=0)
+				{
+					sprintf(pcharMessage,EntryParser.pcharErrMessage);
+					//fMessage(pcharMessage,pMessages_display);
+					return;
+				}
+				else
+				{
+					sprintf(pcharMessage," ");
+					//fMessage(pcharMessage,pMessages_display);
+					Pn[loop]=EntryParser.doubleResult;
+				}
+			}
+			
+			// Modifie les paramètres
+			Rf=Pn[0];
+			Re=Pn[1];
+			Lf=Pn[2];
+			Le=Pn[3];
+			L1=Pn[4];
+			DX=Pn[5];
+			DY=Pn[6];
+			DZ=Pn[7];
+			Nr1=Pn[8];
+			Dr1=Pn[9];
+			Nr12=Pn[10];
+			Dr12=Pn[11];
 		}
 
 		// positions angulaires des bras
@@ -685,5 +721,8 @@ void ending()
 	glDeleteProgram(program);		
 	glDeleteBuffers(3,vboID);			// (nombre de buffer(s) à supprimer, buffer(s))
 	glDeleteVertexArrays(1,vaoID);
+
+	// Ferme le fichier de paramètres
+	fclose(pFileSettings);
 }
 

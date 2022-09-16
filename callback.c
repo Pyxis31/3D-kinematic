@@ -60,7 +60,8 @@ GtkWidget 	*pMaFenetre,*pAbout_dialog,*pMessages_display,*p3Dview,*pRotate_slide
 			*pGpu_renderer_type,*pGpu_shading_lang_ver,*pGpu_manufacturer,*pCross_button,*pArrows_button,
 			*pProjMatrix_switch,*pAspect_switch,*pF_trans_check_button,*pWireframe_switch,*pZero_button,
 			*pFOVy_slider,*pJoint_choice_combobox,*pOpc_check_button,*pPlc_ip_address_entry,*pFrame_choice_combobox,
-			*pRobotsSettings_dialog,*pEntry_Rf;
+			*pRobotsSettings_dialog,*pEntry_Rf,*pEntry_Re,*pEntry_Lf,*pEntry_Le,*pEntry_L1,*pEntry_DX,
+			*pEntry_DY,*pEntry_DZ,*pEntry_Nr1,*pEntry_Dr1,*pEntry_Nr12,*pEntry_Dr12;
 	
 /**********************************************
  ************ Fonctions callback **************
@@ -109,6 +110,17 @@ G_MODULE_EXPORT void on_window1_map_event(GtkWindow* pWindow,gpointer pData)
 	pFrame_choice_combobox=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"frame_choice_combobox"));
 	pRobotsSettings_dialog=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"robotsSettings_dialog"));
 	pEntry_Rf=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Rf"));
+	pEntry_Re=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Re"));
+	pEntry_Lf=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Lf"));
+	pEntry_Le=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Le"));
+	pEntry_L1=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_L1"));
+	pEntry_DX=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_DX"));
+	pEntry_DY=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_DY"));
+	pEntry_DZ=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_DZ"));
+	pEntry_Nr1=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Nr1"));
+	pEntry_Dr1=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Dr1"));
+	pEntry_Nr12=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Nr12"));
+	pEntry_Dr12=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Dr12"));
 
 	
 	// Configuration du widget rotate_slider_joints
@@ -170,6 +182,23 @@ G_MODULE_EXPORT void on_window1_map_event(GtkWindow* pWindow,gpointer pData)
 		
 		// Création du thread
 		pthread_create(&compute_thread,NULL,pComputeThread,(void*)pComputeThreadArgs);
+
+	
+	// Initialisation des paramètres du delta 3 (en mètres)
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Rf),"0.2"); 	// Rayon de la plateforme fixe supérieure (base)
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Re),"0.05");	// Rayon de la nacelle mobile
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Lf),"0.42");	// Longueur des bras
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Le),"0.95");	// Longueur des avant-bras
+
+	// Initialisation des paramètres du poignet du delta 5 (en mètres)
+	gtk_entry_set_text(GTK_ENTRY(pEntry_L1),"0.05");	// Longueur du bras balancier
+	gtk_entry_set_text(GTK_ENTRY(pEntry_DX),"0.0");		// Offset par raport au TCP du delta
+	gtk_entry_set_text(GTK_ENTRY(pEntry_DY),"0.0");		// Offset par raport au TCP du delta
+	gtk_entry_set_text(GTK_ENTRY(pEntry_DZ),"0.05");	// Offset par raport au TCP du delta
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Nr1),"1");		// Numérateur du ratio axe 1/rotation yaw du poignet
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Dr1),"2");		// Dénominateur du ratio axe 1/rotation yaw du poignet
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Nr12),"1");		// Numérateur du ratio axe 2/rotation pitch du bras balancier
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Dr12),"2");		// Dénominateur du ratio axe 2/rotation pitch du bras balancier
 }
 
 
