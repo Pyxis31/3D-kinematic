@@ -183,7 +183,6 @@ G_MODULE_EXPORT void on_window1_map_event(GtkWindow* pWindow,gpointer pData)
 		// Création du thread
 		pthread_create(&compute_thread,NULL,pComputeThread,(void*)pComputeThreadArgs);
 
-	
 	// Initialisation des paramètres du delta 3 (en mètres)
 	gtk_entry_set_text(GTK_ENTRY(pEntry_Rf),"0.2"); 	// Rayon de la plateforme fixe supérieure (base)
 	gtk_entry_set_text(GTK_ENTRY(pEntry_Re),"0.05");	// Rayon de la nacelle mobile
@@ -192,13 +191,13 @@ G_MODULE_EXPORT void on_window1_map_event(GtkWindow* pWindow,gpointer pData)
 
 	// Initialisation des paramètres du poignet du delta 5 (en mètres)
 	gtk_entry_set_text(GTK_ENTRY(pEntry_L1),"0.05");	// Longueur du bras balancier
-	gtk_entry_set_text(GTK_ENTRY(pEntry_DX),"0.0");		// Offset par raport au TCP du delta
-	gtk_entry_set_text(GTK_ENTRY(pEntry_DY),"0.0");		// Offset par raport au TCP du delta
+	gtk_entry_set_text(GTK_ENTRY(pEntry_DX),"0.0");	// Offset par raport au TCP du delta
+	gtk_entry_set_text(GTK_ENTRY(pEntry_DY),"0.0");	// Offset par raport au TCP du delta
 	gtk_entry_set_text(GTK_ENTRY(pEntry_DZ),"0.05");	// Offset par raport au TCP du delta
 	gtk_entry_set_text(GTK_ENTRY(pEntry_Nr1),"1");		// Numérateur du ratio axe 1/rotation yaw du poignet
 	gtk_entry_set_text(GTK_ENTRY(pEntry_Dr1),"2");		// Dénominateur du ratio axe 1/rotation yaw du poignet
-	gtk_entry_set_text(GTK_ENTRY(pEntry_Nr12),"1");		// Numérateur du ratio axe 2/rotation pitch du bras balancier
-	gtk_entry_set_text(GTK_ENTRY(pEntry_Dr12),"2");		// Dénominateur du ratio axe 2/rotation pitch du bras balancier
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Nr12),"1");	// Numérateur du ratio axe 2/rotation pitch du bras balancier
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Dr12),"2");	// Dénominateur du ratio axe 2/rotation pitch du bras balancier
 }
 
 

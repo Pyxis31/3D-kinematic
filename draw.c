@@ -480,6 +480,7 @@ void drawing(sDrawingArg drawingArg)
 				{
 					sprintf(pcharMessage,EntryParser.pcharErrMessage);
 					//fMessage(pcharMessage,pMessages_display);
+					Pn[loop]=atof(pcharEntry[loop]);
 					return;
 				}
 				else
