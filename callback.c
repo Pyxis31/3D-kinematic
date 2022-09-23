@@ -345,7 +345,7 @@ G_MODULE_EXPORT gboolean on_3Dview_render(GtkGLArea* p3Dview, GdkGLContext* pCon
 	}
 
 	// Exécution du dessin
-	drawing(drawingArg);
+	drawing(drawingArg,pMessages_display);
 
 	return TRUE;
 }

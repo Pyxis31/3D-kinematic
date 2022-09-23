@@ -60,6 +60,6 @@ struct sVertex3Dcolor
  **********************************************
 */
 void init(GtkWidget* pMessages_display);
-void drawing(sDrawingArg drawingArg);
+void drawing(sDrawingArg drawingArg,GtkWidget* pMessages_display);
 
 #endif

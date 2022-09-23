@@ -64,6 +64,7 @@ sBase* pBasePos;
 sShoulder* pShoulderPos;
 sElbow* pElbowPos;
 sWrist* pWristPos;
+bool entryNG[12];
 
 
 // INITIALISATIONS
@@ -279,7 +280,7 @@ void init(GtkWidget* pMessages_display)
 	}
 
 // AFFICHAGE
-void drawing(sDrawingArg drawingArg)
+void drawing(sDrawingArg drawingArg,GtkWidget* pMessages_display)
 {
 	// ********** Déclarations (locales) ************
 	// Globales pour gagner du temps CPU à chaque frame
@@ -478,16 +479,17 @@ void drawing(sDrawingArg drawingArg)
 				fEntryIsIntOrFloat(&EntryParser);
 				if (EntryParser.errNumber!=0)
 				{
-					sprintf(pcharMessage,EntryParser.pcharErrMessage);
-					//fMessage(pcharMessage,pMessages_display);
-					Pn[loop]=atof(pcharEntry[loop]);
-					return;
+					if (entryNG[loop]!=true)
+					{
+						sprintf(pcharMessage,"%s\n",EntryParser.pcharErrMessage);
+						fMessage(pcharMessage,pMessages_display);
+						entryNG[loop]=true;
+					}
 				}
 				else
 				{
-					sprintf(pcharMessage," ");
-					//fMessage(pcharMessage,pMessages_display);
 					Pn[loop]=EntryParser.doubleResult;
+					entryNG[loop]=false;
 				}
 			}
 			
