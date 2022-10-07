@@ -61,7 +61,7 @@ GtkWidget 	*pMaFenetre,*pAbout_dialog,*pMessages_display,*p3Dview,*pRotate_slide
 			*pProjMatrix_switch,*pAspect_switch,*pF_trans_check_button,*pWireframe_switch,*pZero_button,
 			*pFOVy_slider,*pJoint_choice_combobox,*pOpc_check_button,*pPlc_ip_address_entry,*pFrame_choice_combobox,
 			*pRobotsSettings_dialog,*pEntry_Rf,*pEntry_Re,*pEntry_Lf,*pEntry_Le,*pEntry_L1,*pEntry_DX,
-			*pEntry_DY,*pEntry_DZ,*pEntry_Nr1,*pEntry_Dr1,*pEntry_Nr12,*pEntry_Dr12;
+			*pEntry_DY,*pEntry_DZ,*pEntry_Nr1,*pEntry_Dr1,*pEntry_Nr12,*pEntry_Dr12,*pEntry_Nr2,*pEntry_Dr2;
 	
 /**********************************************
  ************ Fonctions callback **************
@@ -121,6 +121,8 @@ G_MODULE_EXPORT void on_window1_map_event(GtkWindow* pWindow,gpointer pData)
 	pEntry_Dr1=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Dr1"));
 	pEntry_Nr12=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Nr12"));
 	pEntry_Dr12=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Dr12"));
+	pEntry_Nr2=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Nr2"));
+	pEntry_Dr2=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Dr2"));
 
 	
 	// Configuration du widget rotate_slider_joints
@@ -191,13 +193,15 @@ G_MODULE_EXPORT void on_window1_map_event(GtkWindow* pWindow,gpointer pData)
 
 	// Initialisation des paramètres du poignet du delta 5 (en mètres)
 	gtk_entry_set_text(GTK_ENTRY(pEntry_L1),"0.05");	// Longueur du bras balancier
-	gtk_entry_set_text(GTK_ENTRY(pEntry_DX),"0.0");	// Offset par raport au TCP du delta
-	gtk_entry_set_text(GTK_ENTRY(pEntry_DY),"0.0");	// Offset par raport au TCP du delta
-	gtk_entry_set_text(GTK_ENTRY(pEntry_DZ),"0.05");	// Offset par raport au TCP du delta
+	gtk_entry_set_text(GTK_ENTRY(pEntry_DX),"0.0");		// Offset par raport au TCP du delta
+	gtk_entry_set_text(GTK_ENTRY(pEntry_DY),"0.0");		// Offset par raport au TCP du delta
+	gtk_entry_set_text(GTK_ENTRY(pEntry_DZ),"-0.05");	// Offset par raport au TCP du delta
 	gtk_entry_set_text(GTK_ENTRY(pEntry_Nr1),"1");		// Numérateur du ratio axe 1/rotation yaw du poignet
 	gtk_entry_set_text(GTK_ENTRY(pEntry_Dr1),"2");		// Dénominateur du ratio axe 1/rotation yaw du poignet
-	gtk_entry_set_text(GTK_ENTRY(pEntry_Nr12),"1");	// Numérateur du ratio axe 2/rotation pitch du bras balancier
-	gtk_entry_set_text(GTK_ENTRY(pEntry_Dr12),"2");	// Dénominateur du ratio axe 2/rotation pitch du bras balancier
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Nr12),"1");		// Numérateur du ratio axe 1/rotation pitch du bras balancier
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Dr12),"2");		// Dénominateur du ratio axe 1/rotation pitch du bras balancier
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Nr2),"1");		// Numérateur du ratio axe 2/rotation pitch du bras balancier
+	gtk_entry_set_text(GTK_ENTRY(pEntry_Dr2),"2");		// Dénominateur du ratio axe 2/rotation pitch du bras balancier
 }
 
 

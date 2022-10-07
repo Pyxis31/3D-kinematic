@@ -1050,7 +1050,11 @@ joint6	LREAL	(Publish Only)</property>
             <property name="title" translatable="yes">Robots settings</property>
             <property name="subtitle" translatable="yes">delta 3 and delta 5</property>
             <child>
-              <placeholder/>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="stock">gtk-execute</property>
+              </object>
             </child>
           </object>
           <packing>
@@ -1079,7 +1083,7 @@ joint6	LREAL	(Publish Only)</property>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Re</property>
+                <property name="label" translatable="yes">Re (Rm)</property>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -1101,7 +1105,7 @@ joint6	LREAL	(Publish Only)</property>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Le</property>
+                <property name="label" translatable="yes">Le (Lm)</property>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -1200,7 +1204,6 @@ joint6	LREAL	(Publish Only)</property>
               <object class="GtkEntry" id="entry_Rf">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="placeholder-text" translatable="yes">0.2</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -1318,19 +1321,57 @@ joint6	LREAL	(Publish Only)</property>
               </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Nr2</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">13</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Dr2</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">14</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkEntry" id="entry_Nr2">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">13</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkEntry" id="entry_Dr2">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">14</property>
+              </packing>
             </child>
             <child>
-              <placeholder/>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Wrist</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">4</property>
+              </packing>
             </child>
             <child>
               <placeholder/>

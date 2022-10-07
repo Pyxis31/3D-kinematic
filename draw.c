@@ -31,7 +31,7 @@
 // Externes
 extern GtkWidget 	*pProjMatrix_switch,*pAspect_switch,*pF_trans_check_button,*pWireframe_switch,*pRobotsSettings_dialog,
 					*pEntry_Rf,*pEntry_Re,*pEntry_Lf,*pEntry_Le,*pEntry_L1,*pEntry_DX,*pEntry_DY,*pEntry_DZ,*pEntry_Nr1,
-					*pEntry_Dr1,*pEntry_Nr12,*pEntry_Dr12;
+					*pEntry_Dr1,*pEntry_Nr12,*pEntry_Dr12,*pEntry_Nr2,*pEntry_Dr2;
 extern int frame;
 extern sArgsComputeThread computeThreadArgs;
 
@@ -55,8 +55,8 @@ float aspect_ratio;
 sViewControlRet responseViewControl;
 sfEisIntFloat EntryParser;
 int loop,lineNb,dotNb;
-double Lf,Le,Rf,Re,yawRot,pitchRot,Nr1,Dr1,Nr12,Dr12,L1,DX,DY,DZ,Pn[12]; // Paramètre d'un delta 5
-const char* pcharEntry[12];
+double Lf,Le,Rf,Re,yawRot,pitchRot,Nr1,Dr1,Nr12,Dr12,Nr2,Dr2,L1,DX,DY,DZ,Pn[15]; // Paramètre d'un delta 5
+const char* pcharEntry[15];
 char pcharMessage[50+1]="";
 sDeltaACS Delta3ACS;
 sDeltaMCS Delta3MCS;
@@ -277,6 +277,8 @@ void init(GtkWidget* pMessages_display)
 	Dr1=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Dr1)));
 	Nr12=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Nr12)));
 	Dr12=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Dr12)));
+	Nr2=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Nr2)));
+	Dr2=atof(gtk_entry_get_text(GTK_ENTRY(pEntry_Dr2)));
 	}
 
 // AFFICHAGE
@@ -468,9 +470,11 @@ void drawing(sDrawingArg drawingArg,GtkWidget* pMessages_display)
 			pcharEntry[9]=gtk_entry_get_text(GTK_ENTRY(pEntry_Dr1));
 			pcharEntry[10]=gtk_entry_get_text(GTK_ENTRY(pEntry_Nr12));
 			pcharEntry[11]=gtk_entry_get_text(GTK_ENTRY(pEntry_Dr12));
+			pcharEntry[12]=gtk_entry_get_text(GTK_ENTRY(pEntry_Nr2));
+			pcharEntry[13]=gtk_entry_get_text(GTK_ENTRY(pEntry_Dr2));
 
 			// Analyse les caractères saisis
-			for (loop=0;loop<=11;loop++)
+			for (loop=0;loop<=13;loop++)
 			{
 				EntryParser.pcharEntry=pcharEntry[loop];
 				EntryParser.type=typeFloat;
@@ -506,6 +510,8 @@ void drawing(sDrawingArg drawingArg,GtkWidget* pMessages_display)
 			Dr1=Pn[9];
 			Nr12=Pn[10];
 			Dr12=Pn[11];
+			Nr2=Pn[12];
+			Dr2=Pn[13];
 		}
 
 		// positions angulaires des bras
@@ -620,14 +626,14 @@ void drawing(sDrawingArg drawingArg,GtkWidget* pMessages_display)
 			yawRot=drawingArg.Rotate_sliderValue_Joint4*(Nr1/Dr1);
 
 			// Applique les transformées globales
-			glm_translate(stack[0],(vec3){Delta3MCS.x+DX,Delta3MCS.y,Delta3MCS.z-DY});
+			glm_translate(stack[0],(vec3){Delta3MCS.x+DX,Delta3MCS.y,Delta3MCS.z+DY});
 			glm_rotate(stack[0],degreesToRadians(yawRot),(vec3){0.0,1.0,0.0});
 
 			// Pousse la pile
 			push(stack);
 
 				// Applique les transformées locales
-				glm_scale(stack[0],(vec3){0.02,DZ,0.02});
+				glm_scale(stack[0],(vec3){0.02,-DZ,0.02});
 				glm_translate(stack[0],(vec3){0.0,-0.5,0.0});
 				
 				// Récupération des ID
@@ -644,7 +650,7 @@ void drawing(sDrawingArg drawingArg,GtkWidget* pMessages_display)
 			pop(stack);
 
 			// Joint 5 (axe 2 poignet) (Cube VBO 0)
-			pitchRot=(yawRot+drawingArg.Rotate_sliderValue_Joint5)*(Nr12/Dr12);
+			pitchRot=(drawingArg.Rotate_sliderValue_Joint4*(Nr12/Dr12)+drawingArg.Rotate_sliderValue_Joint5)*(Nr2/Dr2);
 
 			// Applique les transformées globales
 
@@ -652,7 +658,7 @@ void drawing(sDrawingArg drawingArg,GtkWidget* pMessages_display)
 			//push(stack);
 
 				// Applique les transformées locales
-				glm_translate(stack[0],(vec3){0.0,-DZ,0.0});
+				glm_translate(stack[0],(vec3){0.0,DZ,0.0});
 				glm_rotate(stack[0],degreesToRadians(pitchRot),(vec3){0.0,0.0,1.0});
 				glm_translate(stack[0],(vec3){0.0,-L1/2,0.0});
 				glm_scale(stack[0],(vec3){0.02,L1,0.02});

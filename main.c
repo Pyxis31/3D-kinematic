@@ -91,7 +91,7 @@ int main(int argc, char *argv[])
 
     
 	// Création d'une nouvelle instance "MonApplication"
-    MonApplication=gtk_application_new(NULL,G_APPLICATION_FLAGS_NONE);
+    MonApplication=gtk_application_new(NULL,G_APPLICATION_DEFAULT_FLAGS);
     
     // Attente du signal "activate" pour l'appel de la fonction "fStartApplication"
     // Il existe aussi les signaux "startup", "shutdown" et "open" (par ex. pour sauvegarder des données à la fermeture de la session)
