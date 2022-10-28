@@ -31,7 +31,7 @@
 // Externes
 extern GtkWidget 	*pProjMatrix_switch,*pAspect_switch,*pF_trans_check_button,*pWireframe_switch,*pRobotsSettings_dialog,
 					*pEntry_Rf,*pEntry_Re,*pEntry_Lf,*pEntry_Le,*pEntry_L1,*pEntry_DX,*pEntry_DY,*pEntry_DZ,*pEntry_Nr1,
-					*pEntry_Dr1,*pEntry_Nr12,*pEntry_Dr12,*pEntry_Nr2,*pEntry_Dr2;
+					*pEntry_Dr1,*pEntry_Nr12,*pEntry_Dr12,*pEntry_Nr2,*pEntry_Dr2,*pDark_switch;
 extern int frame;
 extern sArgsComputeThread computeThreadArgs;
 
@@ -301,6 +301,9 @@ void drawing(sDrawingArg drawingArg,GtkWidget* pMessages_display)
 
 	// Rendu (primitives filaires ou peintes)
 	(!gtk_switch_get_active(GTK_SWITCH(pWireframe_switch))) ? glPolygonMode(GL_FRONT_AND_BACK,GL_FILL) : glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
+
+	// Thème Dark
+	(!gtk_switch_get_active(GTK_SWITCH(pDark_switch))) ? g_object_set(gtk_settings_get_default(),"gtk-application-prefer-dark-theme",FALSE,NULL) : g_object_set(gtk_settings_get_default(),"gtk-application-prefer-dark-theme",TRUE,NULL);
 	
 	// Type de projection (perspective ou orthogonale)
 	// glm_perspective() : Champ de vision,Ratio d'aspect,Profondeur de champ (plage d'affichage entre 0.1 et 100)

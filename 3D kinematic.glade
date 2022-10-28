@@ -706,6 +706,31 @@ if orthogonal selected</property>
                             <property name="y">15</property>
                           </packing>
                         </child>
+                        <child>
+                          <object class="GtkSwitch" id="dark_switch">
+                            <property name="width-request">50</property>
+                            <property name="height-request">26</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                          </object>
+                          <packing>
+                            <property name="x">190</property>
+                            <property name="y">125</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="height-request">20</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Dark theme</property>
+                            <property name="xalign">0</property>
+                          </object>
+                          <packing>
+                            <property name="x">245</property>
+                            <property name="y">128</property>
+                          </packing>
+                        </child>
                       </object>
                     </child>
                   </object>

@@ -61,7 +61,7 @@ GtkWidget 	*pMaFenetre,*pAbout_dialog,*pMessages_display,*p3Dview,*pRotate_slide
 			*pProjMatrix_switch,*pAspect_switch,*pF_trans_check_button,*pWireframe_switch,*pZero_button,
 			*pFOVy_slider,*pJoint_choice_combobox,*pOpc_check_button,*pPlc_ip_address_entry,*pFrame_choice_combobox,
 			*pRobotsSettings_dialog,*pEntry_Rf,*pEntry_Re,*pEntry_Lf,*pEntry_Le,*pEntry_L1,*pEntry_DX,
-			*pEntry_DY,*pEntry_DZ,*pEntry_Nr1,*pEntry_Dr1,*pEntry_Nr12,*pEntry_Dr12,*pEntry_Nr2,*pEntry_Dr2;
+			*pEntry_DY,*pEntry_DZ,*pEntry_Nr1,*pEntry_Dr1,*pEntry_Nr12,*pEntry_Dr12,*pEntry_Nr2,*pEntry_Dr2,*pDark_switch;
 	
 /**********************************************
  ************ Fonctions callback **************
@@ -123,6 +123,7 @@ G_MODULE_EXPORT void on_window1_map_event(GtkWindow* pWindow,gpointer pData)
 	pEntry_Dr12=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Dr12"));
 	pEntry_Nr2=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Nr2"));
 	pEntry_Dr2=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"entry_Dr2"));
+	pDark_switch=GTK_WIDGET(gtk_builder_get_object(pConstInterface,"dark_switch"));
 
 	
 	// Configuration du widget rotate_slider_joints
