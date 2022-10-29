@@ -423,13 +423,16 @@ G_MODULE_EXPORT void on_window1_scroll_event(GtkWindow* pWindow,GdkEvent *pEvent
 	
 	// *********** Fin de déclarations **************
 
-	if (((GdkEventScroll*)pEvent)->direction==GDK_SCROLL_UP)
+	if (viewControlArg.ArrowsButton)
 	{
-		mouseWheel-=.1;
-	}
-	else if (((GdkEventScroll*)pEvent)->direction==GDK_SCROLL_DOWN)
-	{
-		mouseWheel+=.1;
+		if (((GdkEventScroll*)pEvent)->direction==GDK_SCROLL_UP)
+		{
+			mouseWheel-=.1;
+		}
+		else if (((GdkEventScroll*)pEvent)->direction==GDK_SCROLL_DOWN)
+		{
+			mouseWheel+=.1;
+		}
 	}
 	mouseWheel=CLAMP(mouseWheel,1.00,10.00);
 
