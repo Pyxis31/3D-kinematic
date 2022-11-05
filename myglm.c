@@ -114,8 +114,9 @@ vector3 vec_rotate(vector3 vector,float angle)
 */
 
 // Recherche du premier vecteur orthogonal
-void vec_getOrthoVector(float* result,float x,float y,float z)
+float* vec_getOrthoVector(float x,float y,float z)
 {
+	static float result[]={0,0,0};
 
 	if (x==0)
 	{
@@ -137,8 +138,10 @@ void vec_getOrthoVector(float* result,float x,float y,float z)
 		result[2]=0;
 	}
 
-	// On retourne le vecteur orthogonal normalisé
+	// On normalise ce vecteur orthogonal
 	normalize(&result[0],&result[1],&result[2]);
+
+	return result;
 }
 
 

@@ -35,6 +35,6 @@ void mat_scale(float* pMatrix,float dx,float dy,float dz);
 static void normalize(float* pX,float* pY,float* pZ);
 void mat_rotate(float* pMatrix,float x, float y, float z, float angle);
 void mat_multiply(float* pMatrix,float* pA,float* pB);
-void vec_getOrthoVector(float* result,float x,float y,float z);
+float* vec_getOrthoVector(float x,float y,float z);
 
 #endif
