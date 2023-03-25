@@ -62,7 +62,7 @@ static void normalize(float* pX,float* pY,float* pZ)
 	// On normalise
 	*pX/=L;
 	*pY/=L;
-	*pZ/=L;
+	*pZ/=L; 
 }
 
 void mat_rotate(float* pMatrix,float x, float y, float z, float angle)
@@ -120,19 +120,19 @@ float* vec_getOrthoVector(float x,float y,float z)
 
 	if (x==0)
 	{
-		result[0]=1; // Le vecteur initial est sur le plan YZ, on retourne le vecteur X unitaire
+		result[0]=1; // Le vecteur initial est sur le plan YZ, on renvoie le vecteur X unitaire
 	}
 	else if (y==0)
 	{
-		result[1]=1; // Le vecteur initial est sur le plan XZ, on retourne le vecteur Y unitaire
+		result[1]=1; // Le vecteur initial est sur le plan XZ, on renvoie le vecteur Y unitaire
 	}
 	else if (z==0)
 	{
-		result[2]=1; // Le vecteur initial est sur le plan XY, on retourne le vecteur Z unitaire
+		result[2]=1; // Le vecteur initial est sur le plan XY, on renvoie le vecteur Z unitaire
 	}
 	else
 	{
-		// Le vecteur initial n'est pas sur un plan principal, on retourne un vecteur dont le produit scalaire avec le vecteur initial est nul
+		// Le vecteur initial n'est pas sur un plan principal, on renvoie un vecteur dont le produit scalaire avec le vecteur initial est nul
 		result[0]=-y;
 		result[1]=x;
 		result[2]=0;

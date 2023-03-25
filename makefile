@@ -17,7 +17,7 @@ DIR_GTK = "C:/msys64/mingw32"
 DIR_3D_kinematic = "C:/Users/simfra.EU_OMRON_NET/Documents/Informatique/3Dkinematic"
 
 # De l'exécutable
-OUTPUT_DIR = "C:/Users/simfra.EU_OMRON_NET/Desktop/3Dkinematic/bin"
+OUTPUT_DIR = "C:/Users/simfra.EU_OMRON_NET/Documents/Informatique/3Dkinematic exe/bin"
 
 # Répertoires dans lesquels se trouvent les fichiers d'en-têtes (.h)
 # -I : ajoute un répertoire de recherche de fichiers
